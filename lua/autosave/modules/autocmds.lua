@@ -64,7 +64,12 @@ function M.save()
 
     if (opts["execution_message"] ~= "" and get_modified() == true) then
         print(opts["execution_message"])
+		set_modified(false)
     end
+
+	if (opts["clean_command_line_interval"] > 0) then
+		cmd([[sleep ]] .. opts["clean_command_line_interval"] .. [[ | echon '']])
+	end
 end
 
 local function parse_events()

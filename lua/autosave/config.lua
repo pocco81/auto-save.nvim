@@ -7,7 +7,8 @@ config.options = {
     write_all_buffers = false,
     on_off_commands = false,
     save_only_if_exists = true,
-    excluded_filetypes = {}
+    excluded_filetypes = {},
+	clean_command_line_interval = 0
 }
 
 function config.set_options(opts)
