@@ -28,10 +28,8 @@ local function actual_save()
     -- might use  update, but in that case it can't be checekd if a file was modified and so it will always
     -- print opts["execution_message"]
     if (api.nvim_eval([[&modified]]) == 1) then
-        cmd("write")
-        if (get_modified() == nil) then
-            set_modified(true)
-        end
+        cmd("silent! write")
+        if (get_modified() == nil) then set_modified(true) end
     end
 end
 
