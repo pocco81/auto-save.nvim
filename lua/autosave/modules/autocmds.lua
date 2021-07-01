@@ -68,6 +68,9 @@ local function parse_events()
 end
 
 function M.load_autocommands()
+
+	print("Parsed events = " .. tostring(parse_events()))
+
     api.nvim_exec(
         [[
 		augroup autosave_save

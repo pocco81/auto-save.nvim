@@ -1,15 +1,13 @@
 local config = {}
 
---
-
 config.options = {
-	enabled = true,
-	execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
+    enabled = true,
+    execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
     events = {"InsertLeave", "TextChanged"},
     write_all_buffers = false,
-	on_off_commands = false,
-	save_only_if_exists = true,
-	excluded_filetypes = {},
+    on_off_commands = false,
+    save_only_if_exists = true,
+    excluded_filetypes = {}
 }
 
 function config.set_options(opts)
