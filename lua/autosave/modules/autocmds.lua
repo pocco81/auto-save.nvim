@@ -41,7 +41,7 @@ local function do_save()
     end
 end
 
-local function save()
+function M.save()
     if (opts["write_all_buffers"] == true) then
         cmd([[call g:AutoSaveBufDo("lua require'autosave.modules.autocmds'.do_save()")]])
     else
