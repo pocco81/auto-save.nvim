@@ -1,0 +1,5 @@
+This plugin is for automatically saving files.
+
+
+it should only write if:
+	1. buffer has been modified
