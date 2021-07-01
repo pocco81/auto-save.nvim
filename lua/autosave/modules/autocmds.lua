@@ -7,7 +7,7 @@ local cmd = vim.cmd
 local M = {}
 
 local function table_has_value(tbl, value)
-    for key, value in pairs(tbl) do
+    for key, _ in pairs(tbl) do
         if (tbl[key] == value) then
             return true
         end
@@ -24,7 +24,7 @@ local function get_modified()
     return modified
 end
 
-local function do_save()
+function M.do_save()
     if (opts["save_only_if_exists"] == true) then
         if (fn.filereadable(fn.expand("%:p")) == 1) then
             if not (next(opts["excluded_filetypes"]) == nil) then
@@ -45,7 +45,7 @@ function M.save()
     if (opts["write_all_buffers"] == true) then
         cmd([[call g:AutoSaveBufDo("lua require'autosave.modules.autocmds'.do_save()")]])
     else
-        do_save()
+        M.do_save()
     end
 
     if (opts["execution_message"] ~= "" and get_modified() == true) then
@@ -60,7 +60,6 @@ local function parse_events()
         events = "InsertLeave"
     else
         for event, _ in pairs(opts["events"]) do
-			print("event 1 = ".. event .. "; event 2 " == opts["events"][event])
             events = events .. opts["events"][event] .. ","
         end
     end
@@ -69,8 +68,6 @@ local function parse_events()
 end
 
 function M.load_autocommands()
-
-	print("Parsed events = " .. tostring(parse_events()))
 
     api.nvim_exec(
         [[
