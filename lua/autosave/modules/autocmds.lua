@@ -29,7 +29,7 @@ local function actual_save()
     -- print opts["execution_message"]
     if (api.nvim_eval([[&modified]]) == 1) then
         cmd("silent! write")
-        if (get_modified() == nil) then set_modified(true) end
+        if (get_modified() == nil or get_modified() == false) then set_modified(true) end
     end
 end
 
