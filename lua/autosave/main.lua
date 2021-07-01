@@ -4,6 +4,8 @@ local opts = require("autosave.config").options
 local autocmds = require("autosave.modules.autocmds")
 local autosave = require("autosave")
 
+require("autosave.utils.viml_funcs")
+
 local M = {}
 
 
