@@ -36,7 +36,9 @@ local function actual_save()
 end
 
 function M.do_save()
-    local cs_exists, cs_filetype = true, true
+
+	-- cs = can save
+    local cs_exists, cs_filetype, cs_modifiable = true, true, true
 
     if not (next(opts["excluded_filetypes"]) == nil) then
         if (table_has_value(opts["excluded_filetypes"], api.nvim_eval([[&filetype]])) == true) then
@@ -50,7 +52,11 @@ function M.do_save()
         end
     end
 
-    if (cs_exists == true and cs_filetype == true) then
+	if (api.nvim_eval([[&modifiable]]) == 0) then
+		cs_modifiable = false
+	end
+
+    if (cs_exists == true and cs_filetype == true and cs_modifiable == true) then
         actual_save()
     end
 end
