@@ -29,7 +29,9 @@ local function actual_save()
     -- print opts["execution_message"]
     if (api.nvim_eval([[&modified]]) == 1) then
         cmd("silent! write")
-        if (get_modified() == nil or get_modified() == false) then set_modified(true) end
+        if (get_modified() == nil or get_modified() == false) then
+            set_modified(true)
+        end
     end
 end
 
@@ -64,6 +66,12 @@ function M.save()
         print(opts["execution_message"])
         set_modified(false)
     end
+
+    if (opts["clean_command_line_interval"] > 0) then
+        cmd(
+            [[call timer_start(]] .. opts["clean_command_line_interval"] .. [[, funcref('g:AutoSaveClearCommandLine'))]]
+        )
+    end
 end
 
 local function parse_events()
@@ -91,19 +99,6 @@ function M.load_autocommands()
 	]],
         false
     )
-
-    if (opts["clean_command_line_interval"] > 0) then
-        api.nvim_exec(
-            [[
-			augroup autosave_clean_command_line
-				autocmd!
-				autocmd CmdlineLeave * call timer_start(]] ..
-                opts["clean_command_line_interval"] .. [[, funcref('g:AutoSaveClearCommandLine'))
-			augroup END
-		]],
-            false
-        )
-    end
 end
 
 function M.unload_autocommands()
@@ -112,14 +107,6 @@ function M.unload_autocommands()
 			autocmd!
 		augroup END
 	]], false)
-
-    if (opts["clean_command_line_interval"] > 0) then
-        api.nvim_exec([[
-			augroup autosave_clean_command_line
-				autocmd!
-			augroup END
-		]], false)
-    end
 end
 
 return M
