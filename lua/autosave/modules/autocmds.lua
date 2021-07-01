@@ -60,6 +60,7 @@ local function parse_events()
         events = "InsertLeave"
     else
         for event, _ in pairs(opts["events"]) do
+			print("event 1 = ".. event .. "; event 2 " == opts["events"][event])
             events = events .. opts["events"][event] .. ","
         end
     end
