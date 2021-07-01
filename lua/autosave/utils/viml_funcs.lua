@@ -13,3 +13,14 @@ api.nvim_exec(
 ]],
     false
 )
+
+api.nvim_exec(
+    [[
+	function! g:AutoSaveClearCommandLine(timer)
+		if mode() ==# 'n'
+			echon ''
+		endif
+	endfunction
+]],
+    false
+)
