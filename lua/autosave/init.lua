@@ -12,7 +12,6 @@ local function setup_commands()
 end
 
 function M.setup(custom_opts)
-	print("Setting up the plugin...")
     require("autosave.config").set_options(custom_opts)
 	setup_commands()
 end

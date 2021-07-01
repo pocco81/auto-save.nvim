@@ -36,16 +36,22 @@ local function actual_save()
 end
 
 function M.do_save()
-    if (opts["save_only_if_exists"] == true) then
-        if (fn.filereadable(fn.expand("%:p")) == 1) then
-            if not (next(opts["excluded_filetypes"]) == nil) then
-                if (table_has_value(opts["excluded_filetypes"], api.nvim_eval([[&filetype]])) == false) then
-					actual_save()
-                end
-			else
-				actual_save()
-            end
+    local cs_exists, cs_filetype = true, true
+
+    if not (next(opts["excluded_filetypes"]) == nil) then
+        if (table_has_value(opts["excluded_filetypes"], api.nvim_eval([[&filetype]])) == true) then
+            cs_filetype = false
         end
+    end
+
+    if (opts["save_only_if_exists"] == true) then
+        if (fn.filereadable(fn.expand("%:p")) == 0) then
+            cs_exists = false
+        end
+    end
+
+    if (cs_exists == true and cs_filetype == true) then
+        actual_save()
     end
 end
 
@@ -58,7 +64,7 @@ function M.save()
 
     if (opts["execution_message"] ~= "" and get_modified() == true) then
         print(opts["execution_message"])
-		set_modified(false)
+        set_modified(false)
     end
 end
 
@@ -88,17 +94,18 @@ function M.load_autocommands()
         false
     )
 
-	if (opts["clean_command_line_interval"] > 0) then
-		api.nvim_exec(
-			[[
+    if (opts["clean_command_line_interval"] > 0) then
+        api.nvim_exec(
+            [[
 			augroup autosave_clean_command_line
 				autocmd!
-				autocmd CmdlineLeave * call timer_start(]].. opts["clean_command_line_interval"] ..[[, funcref('g:AutoSaveClearCommandLine'))
+				autocmd CmdlineLeave * call timer_start(]] ..
+                opts["clean_command_line_interval"] .. [[, funcref('g:AutoSaveClearCommandLine'))
 			augroup END
 		]],
-			false
-		)
-	end
+            false
+        )
+    end
 end
 
 function M.unload_autocommands()
@@ -108,16 +115,13 @@ function M.unload_autocommands()
 		augroup END
 	]], false)
 
-	if (opts["clean_command_line_interval"] > 0) then
-		api.nvim_exec(
-			[[
+    if (opts["clean_command_line_interval"] > 0) then
+        api.nvim_exec([[
 			augroup autosave_clean_command_line
 				autocmd!
 			augroup END
-		]],
-			false
-		)
-	end
+		]], false)
+    end
 end
 
 return M
