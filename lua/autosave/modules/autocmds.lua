@@ -1,8 +1,9 @@
-local opts = require("autosave.config").options
-
 local api = vim.api
 local fn = vim.fn
 local cmd = vim.cmd
+
+local opts = require("autosave.config").options
+local autosave = require("autosave")
 
 local M = {}
 
@@ -42,19 +43,22 @@ local function assert_user_conditions()
         if (condition == "exists") then
             if (value == true) then
                 if (fn.filereadable(fn.expand("%:p")) == 0) then
-                    sc_exists = false; break
+                    sc_exists = false
+                    break
                 end
             end
         elseif (condition == "modifiable") then
             if (value == true) then
                 if (api.nvim_eval([[&modifiable]]) == 0) then
-                    sc_modifiable = false; break
+                    sc_modifiable = false
+                    break
                 end
             end
         elseif (condition == "filetype_is_not") then
             if not (next(opts["conditions"]["filetype_is_not"]) == nil) then
                 if (table_has_value(opts["conditions"]["filetype_is_not"], api.nvim_eval([[&filetype]])) == true) then
-                    sc_filetype = false; break
+                    sc_filetype = false
+                    break
                 end
             end
         end
@@ -64,36 +68,50 @@ local function assert_user_conditions()
 end
 
 local function assert_return(values, expected)
-	for key, value in pairs(values) do
-		if (value ~= expected) then return false end
-	end
+    for key, value in pairs(values) do
+        if (value ~= expected) then
+            return false
+        end
+    end
 
-	return true
+    return true
 end
 
 function M.do_save()
-	if (assert_return(assert_user_conditions(), true)) then
-		actual_save()
-	end
+    if (assert_return(assert_user_conditions(), true)) then
+        actual_save()
+    end
 end
 
 function M.save()
+
+	if (autosave.hook_before_saving ~= nil) then
+		autosave.hook_before_saving()
+	end
+
     if (opts["write_all_buffers"] == true) then
         cmd([[call g:AutoSaveBufDo("lua require'autosave.modules.autocmds'.do_save()")]])
     else
         M.do_save()
     end
 
-    if (opts["execution_message"] ~= "" and get_modified() == true) then
-        print(opts["execution_message"])
+    if (get_modified() == true) then
         set_modified(false)
+        if (opts["execution_message"] ~= "") then
+            print(opts["execution_message"])
+        end
+
+        if (opts["clean_command_line_interval"] > 0) then
+            cmd(
+                [[call timer_start(]] ..
+                    opts["clean_command_line_interval"] .. [[, funcref('g:AutoSaveClearCommandLine'))]]
+            )
+        end
     end
 
-    if (opts["clean_command_line_interval"] > 0) then
-        cmd(
-            [[call timer_start(]] .. opts["clean_command_line_interval"] .. [[, funcref('g:AutoSaveClearCommandLine'))]]
-        )
-    end
+	if (autosave.hook_after_saving ~= nil) then
+		autosave.hook_after_saving()
+	end
 end
 
 local function parse_events()
