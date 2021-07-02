@@ -62,8 +62,11 @@
 	* [Updating](#updating)
 * [Usage (commands)](#-usage-commands)
 	* [Default](#default)
+	* [Extra](#extra)
 * [Configuration](#-configuration)
 	* [General](#general)
+	* [Conditions](#conditions)
+	* [Hooks](#hooks)
 * [Contribute](#-contribute)
 * [Inspirations](#-inspirations)
 * [License](#-license)
@@ -71,25 +74,22 @@
 * [To-Do](#-to-do)
 
 # 🎁 Features
-- Highlight visual selection in any given *pre-defined* color.
-- Remove highlighting from lines in visual selection.
-- Users can set up foreground and background of any color.
-- Has a "smart" option to set foreground based on background.
-- Users can add any amount of colors.
-- Produce a *verbose* output for debugging (optional).
++ Automatically save current file(s).
++ Set conditions that files must meet to be saved (e.g. filetype, existence, ...).
++ Set events that will trigger the plugin.
++ Add custom hooks (e.g. print a message when the plugin is turned off).
++ Toggle the plugin on and off.
 
 # 📺 Notices
 Checkout the [CHANGELOG.md](https://github.com/Pocco81/AutoSave.nvim/blob/main/CHANGELOG.md) file for more information on the notices below:
 
-- **26-05-21**: Fixed bug that prevented adding new colors and added option to remove all highlighting from the current buffer
-- **25-05-21**: Just released!
+- **01-07-21**: Just released!
 
 # 📦 Installation
 
 ## Prerequisites
 
 - [NeoVim nightly](https://github.com/neovim/neovim/releases/tag/nightly) (>=v0.5.0)
-- A nice color scheme to complement your experience ;)
 
 ## Adding the plugin
 You can use your favorite plugin manager for this. Here are some examples with the most popular ones:
@@ -204,8 +204,8 @@ All the commands follow the *camel casing* naming convention and have the `AS` p
 + `:ASToggle`: toggles AutoSave.nvim on and off.
 
 ## Extra
-+ `:ASOn`: toggles AutoSave.nvim on.
-+ `:ASOff`: toggles AutoSave.nvim off.
++ `:ASOn`: turns AutoSave.nvim on.
++ `:ASOff`: turns AutoSave.nvim off.
 
 # 🐬 Configuration
 Although settings already have self-explanatory names, here is where you can find info about each one of them and their classifications!
@@ -224,6 +224,28 @@ These are the conditions that every file must meet so that it can be saved. If e
 + `exists`: (Boolean) if true, enables this condition. If the file doesn't exist it won't save it (e.g. if you `nvim stuff.txt` and don't save the file then this condition won't be met)
 + `modifiable`: (Boolean) if true, enables this condition. If the file isn't modifiable, then this condition isn't met.
 + `filetype_is_not`: (Table, Strings) if there is one or more filetypes (should be strings) in the table, it enables this condition. Use this to exclude filetypes that you don't want to automatically save.
+
+## Hooks
+Use them to execute code at certain events [described by their names]. These are the ones available:
+
+| Function             | Description                                                        |
+|----------------------|--------------------------------------------------------------------|
+| hook_before_on()     | Before toggling the plugin on                                      |
+| hook_after_on()      | After toggling the plugin on                                       |
+| hook_before_off()    | Before toggling the plugin off                                     |
+| hook_after_off()     | After toggling the plugin off                                      |
+| hook_before_saving() | Before its even checked if the current file(s) meet the conditions |
+| hook_after_saving    | After saving the file(s)                                           |
+
+They can be used like so:
+
+```lua
+local autosave = require("autosave")
+
+autosave.hook_after_off = function ()
+	print("I was toggled off!")
+end
+```
 
 # 🙋 FAQ
 
@@ -253,10 +275,10 @@ For more convoluted language, see the [LICENSE file](https://github.com/Pocco81/
 # 📋 TO-DO
 
 **High Priority**
-- Store and Restore highlights on a per-file basis
++ None
 
 **Low Priority**
-- Add tab completion to get more than 10 numbers.
++ None
 
 <hr>
 <p align="center">

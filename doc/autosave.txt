@@ -1,0 +1,230 @@
+*AutoSave.nvim*						*AutoSave-help*		A NeoVim plugin for highlighting visual selections like in a normal document editor!
+
+Author:		Pocco81 <https://github.com/Pocco81>
+License:	GPL-3.0 License
+
+CONTENTS							*truezen-contents*
+
+TL;DR								|autosave-tldr|
+Installation						|autosave-installation|
+	Prerequisites					|autosave-prerequisites|
+	Adding the plugin				|autosave-adding-the-plugin|
+	Setup Configuration				|autosave-setup-configuration|
+		For init.lua				|autosave-for-initlua|
+		For init.vim				|autosave-for-initvim|
+	Updating						|autosave-updating|
+Features							|autosave-features|
+Usage (commands)					|autosave-usage-commands|
+	Default							|autosave-default|
+	Extra							|autosave-extra|
+Configuration						|autosave-configuration|
+	General							|autosave-general|
+	Conditions						|autosave-conditions|
+	Hooks							|autosave-hooks|
+
+==============================================================================
+
+# TL;DR											*autosave-tldr*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Installation									*autosave-installation*
+
+## Prerequisites								*autosave-prerequisites*
+
+- [NeoVim nightly](https://github.com/neovim/neovim/releases/tag/nightly) (>=v0.5.0)
+- [Lua ver. >= 5.3](https://www.lua.org/manual/5.3/readme.html#changes)
+- A nice color scheme to complement your experience ;)
+
+## Adding the plugin							*AutoSave-adding-the-plugin*
+You can use your favorite plugin manager for this. Here are some examples with the most popular ones:
+
+### Vim-plug
+
+```lua
+Plug 'Pocco81/AutoSave.nvim'
+```
+### Packer.nvim
+
+```lua
+use "Pocco81/AutoSave.nvim"
+```
+
+### Vundle
+
+```lua
+Plugin 'Pocco81/AutoSave.nvim'
+```
+
+### NeoBundle
+```lua
+NeoBundleFetch 'Pocco81/AutoSave.nvim'
+```
+
+## Setup (configuration)						*AutoSave-setup-configuration*
+As it's stated in the TL;DR, there are already some sane defaults that you may like, however you can change them to match your taste. These are the defaults:
+```lua
+verbosity = 0,
+highlight_colors = {
+	color_0 = {"#0c0d0e", "smart"},	-- Cosmic charcoal
+	color_1 = {"#e5c07b", "smart"},	-- Pastel yellow
+	color_2 = {"#7FFFD4", "smart"},	-- Aqua menthe
+	color_3 = {"#8A2BE2", "smart"},	-- Proton purple
+	color_4 = {"#FF4500", "smart"},	-- Orange red
+	color_5 = {"#008000", "smart"},	-- Office green
+	color_6 = {"#0000FF", "smart"},	-- Just blue
+	color_7 = {"#FFC0CB", "smart"},	-- Blush pink
+	color_8 = {"#FFF9E3", "smart"},	-- Cosmic latte
+	color_9 = {"#7d5c34", "smart"},	-- Fallow brown
+}
+```
+
+The way you setup the settings on your config varies on whether you are using vimL for this or Lua.
+
+
+For init.lua									*AutoSave-for-initlua*
+
+```lua
+local high_str = require("high-str")
+
+high_str.setup({
+	verbosity = 0,
+	highlight_colors = {
+		-- color_id = {"bg_hex_code",<"fg_hex_code"/"smart">}
+		color_0 = {"#0c0d0e", "smart"},	-- Cosmic charcoal
+		color_1 = {"#e5c07b", "smart"},	-- Pastel yellow
+		color_2 = {"#7FFFD4", "smart"},	-- Aqua menthe
+		color_3 = {"#8A2BE2", "smart"},	-- Proton purple
+		color_4 = {"#FF4500", "smart"},	-- Orange red
+		color_5 = {"#008000", "smart"},	-- Office green
+		color_6 = {"#0000FF", "smart"},	-- Just blue
+		color_7 = {"#FFC0CB", "smart"},	-- Blush pink
+		color_8 = {"#FFF9E3", "smart"},	-- Cosmic latte
+		color_9 = {"#7d5c34", "smart"},	-- Fallow brown
+	}
+})
+```
+
+For init.vim									*AutoSave-for-initvim*
+
+```lua
+lua << EOF
+local high_str = require("high-str")
+
+
+high_str.setup({
+	verbosity = 0,
+	highlight_colors = {
+		-- color_id = {"bg_hex_code",<"fg_hex_code"/"smart">}
+		color_0 = {"#0c0d0e", "smart"},	-- Cosmic charcoal
+		color_1 = {"#e5c07b", "smart"},	-- Pastel yellow
+		color_2 = {"#7FFFD4", "smart"},	-- Aqua menthe
+		color_3 = {"#8A2BE2", "smart"},	-- Proton purple
+		color_4 = {"#FF4500", "smart"},	-- Orange red
+		color_5 = {"#008000", "smart"},	-- Office green
+		color_6 = {"#0000FF", "smart"},	-- Just blue
+		color_7 = {"#FFC0CB", "smart"},	-- Blush pink
+		color_8 = {"#FFF9E3", "smart"},	-- Cosmic latte
+		color_9 = {"#7d5c34", "smart"},	-- Fallow brown
+	}
+})
+EOF
+```
+<br />
+</details>
+
+For instructions on how to configure the plugin, check out the [configuration](#configuration) section.
+
+## Updating										*AutoSave-updating*
+This depends on your plugin manager. If, for example, you are using Packer.nvim, you can update it with this command:
+```lua
+:PackerUpdate
+```
+
+# Usage (commands)								*AutoSave-usage-commands*
+All the commands follow the *camel casing* naming convention and have the `HS` prefix so that it's easy to remember that they are part of the AutoSave.nvim plugin. These are all of them:
+
+## Default										*AutoSave-default*
+- `:HSHighlight <integer>` highlights current visual selection and receives an `<integer>` that indicates which colors to use from the `highlight_colors = {}` table; if none is given, AutoSave.nvim will pick `color_1`.
+- `:HSRmHighlight <rm_all>` If the `rm_all` argument is given, removes all the highlighting in the current buffer. If not, does the same but for every line in visual selection.
+
+# Configuration									*AutoSave-configuration*
+Although settings already have self-explanatory names, here is where you can find info about each one of them and their classifications!
+
+## General										*AutoSave-general*
+This settings are unrelated to any group and are independent.
+- `verbosity`: (Integer) if greater that zero, enables verbose output (print what it does when you execute any of the two command).
+
+## Highlight Colors								*AutoSave-highlight-colors*
+The table `highlight_colors = {}` contains all of the colors AutoSave.nvim will use when you highlight something. The convention is simple: `color_<a_number>`. Each color is a table in which the first element represents the background of the color (the highlight it self), and the second one represents the foreground (the color of the text that's being highlighted). The second parameter may also be the word "smart", to change the color of the foreground based on the background in order to get a better contrast (e.g. if background is white, set foreground to black). Here is an example:
+
+```
+color_1 = {"#FFF9E3", "smart"}
+```
+
+Here we are setting a cool color called Cosmic Latte (looks like white), that we are assigning to `color_1` and we are giving its parameters to a table: the first one is the highlight itself ("#FFF9E3") and in the second one ("smart") we are telling it to set a foreground that will make contrast with the background (black in this case).
+
+Conditions:
+- The numbers that are assigned to the colors (e.g. `color_2`) should not be repeated, because it's what you'll use to "call" that highlight color.
+- The color it self (argument one in a color's table) should be in its hex value.
+
+# Key-bindings									*AutoSave-keybindings*
+There are no default key-bindings. However, you can set them on your own as you'd normally do! Here is an example mapping `<F3>` to highlight stuff and `<F4>` to remove the highlighting:
+
+**For init.lua**
+```lua
+vim.api.nvim_set_keymap(
+    "v",
+    "<F3>",
+    ":<c-u>HSHighlight 1<CR>",
+    {
+        noremap = true,
+        silent = true
+    }
+)
+
+vim.api.nvim_set_keymap(
+    "v",
+    "<F4>",
+    ":<c-u>HSRmHighlight<CR>",
+    {
+        noremap = true,
+        silent = true
+    }
+)
+```
+
+**For init.vim**
+```vimscript
+vnoremap <silent> <f3> :<c-u>HSHighlight 1<CR>
+vnoremap <silent> <f4> :<c-u>HSRmHighlight<CR>
+
+```
+
+# License										*AutoSave-license*
+
+AutoSave.nvim is released under the GPL v3.0 license. It grants open-source permissions for users including:
+
+- The right to download and run the software freely
+- The right to make changes to the software as desired
+- The right to redistribute copies of the software
+- The right to modify and distribute copies of new versions of the software
+
+For more convoluted language, see the [LICENSE file](https://github.com/Pocco81/AutoSave.nvim/blob/main/README.md).
+
