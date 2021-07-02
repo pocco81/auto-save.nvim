@@ -46,7 +46,7 @@
 # TL;DR
 
 <div style="text-align: justify">
-	AutoSave.nvim is a NeoVim plugin written in Lua that aims to provide the simple functionality of automatically saving your work whenever you make changes to it. You can filter under which conditions which files are saved and when the auto-save functionality should triggered (events). To get started simply install the plugin with your favorite plugin manager!
+	AutoSave.nvim is a NeoVim plugin written in Lua that aims to provide the simple functionality of automatically saving your work whenever you make changes to it. You can filter under which conditions which files are saved and when the auto-save functionality should be triggered (events). To get started simply install the plugin with your favorite plugin manager!
 </div>
 
 # 🌲 Table of Contents
