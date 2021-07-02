@@ -35,26 +35,46 @@ local function actual_save()
     end
 end
 
+local function assert_user_conditions()
+    local sc_exists, sc_filetype, sc_modifiable = true, true, true
+
+    for condition, value in pairs(opts["conditions"]) do
+        if (condition == "exists") then
+            if (value == true) then
+                if (fn.filereadable(fn.expand("%:p")) == 0) then
+                    sc_exists = false; break
+                end
+            end
+        elseif (condition == "modifiable") then
+            if (value == true) then
+                if (api.nvim_eval([[&modifiable]]) == 0) then
+                    sc_modifiable = false; break
+                end
+            end
+        elseif (condition == "filetype_is_not") then
+            if not (next(opts["conditions"]["filetype_is_not"]) == nil) then
+                if (table_has_value(opts["conditions"]["filetype_is_not"], api.nvim_eval([[&filetype]])) == true) then
+                    sc_filetype = false; break
+                end
+            end
+        end
+    end
+
+    return {sc_exists, sc_filetype, sc_modifiable}
+end
+
+local function assert_return(values, expected)
+	for key, value in pairs(values) do
+		if (value ~= expected) then return false end
+	end
+
+	return true
+end
+
 function M.do_save()
-
-	-- cs = can save
-    local cs_exists, cs_filetype = true, true
-
-    if not (next(opts["excluded_filetypes"]) == nil) then
-        if (table_has_value(opts["excluded_filetypes"], api.nvim_eval([[&filetype]])) == true) then
-            cs_filetype = false
-        end
-    end
-
-    if (opts["save_only_if_exists"] == true) then
-        if (fn.filereadable(fn.expand("%:p")) == 0) then
-            cs_exists = false
-        end
-    end
-
-    if (cs_exists == true and cs_filetype == true) then
-        actual_save()
-    end
+	if (assert_return(assert_user_conditions(), true)) then
+		actual_save()
+	end
 end
 
 function M.save()
@@ -96,7 +116,8 @@ function M.load_autocommands()
 		augroup autosave_save
 			autocmd!
 			autocmd ]] ..
-            parse_events() .. [[ * if (&modifiable == 1) | execute "lua require'autosave.modules.autocmds'.save()" | endif
+            parse_events() ..
+                [[ * if (&modifiable == 1) | execute "lua require'autosave.modules.autocmds'.save()" | endif
 		augroup END
 	]],
         false
