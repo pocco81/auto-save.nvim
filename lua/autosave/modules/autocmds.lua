@@ -38,7 +38,7 @@ end
 function M.do_save()
 
 	-- cs = can save
-    local cs_exists, cs_filetype, cs_modifiable = true, true, true
+    local cs_exists, cs_filetype = true, true
 
     if not (next(opts["excluded_filetypes"]) == nil) then
         if (table_has_value(opts["excluded_filetypes"], api.nvim_eval([[&filetype]])) == true) then
@@ -52,11 +52,7 @@ function M.do_save()
         end
     end
 
-	if (api.nvim_eval([[&modifiable]]) == 0) then
-		cs_modifiable = false
-	end
-
-    if (cs_exists == true and cs_filetype == true and cs_modifiable == true) then
+    if (cs_exists == true and cs_filetype == true) then
         actual_save()
     end
 end
@@ -100,7 +96,7 @@ function M.load_autocommands()
 		augroup autosave_save
 			autocmd!
 			autocmd ]] ..
-            parse_events() .. [[ * execute "lua require'autosave.modules.autocmds'.save()"
+            parse_events() .. [[ * if (&modifiable == 1) | execute "lua require'autosave.modules.autocmds'.save()" | endif
 		augroup END
 	]],
         false
