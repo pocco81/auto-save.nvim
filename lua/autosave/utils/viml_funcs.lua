@@ -17,7 +17,7 @@ api.nvim_exec(
 api.nvim_exec(
     [[
 	function! g:AutoSaveClearCommandLine(timer)
-		if mode() ==# 'n'
+		if mode() != 'c'
 			echon ''
 		endif
 	endfunction
