@@ -146,7 +146,6 @@ All the commands follow the *camel casing* naming convention and have the `AS` p
 Although settings already have self-explanatory names, here is where you can find info about each one of them and their classifications!
 
 ## General
-- `verbosity`: (Integer) if greater that zero, enables verbose output (print what it does when you execute any of the two command).
 + `enabled:`: (Boolean) if true, enables AutoSave.nvim at startup (Note: this is not for loading the plugin it self but rather the "auto-save" functionality. This is like running `:ASOn`).
 + `execution_message`: (String) message to be displayed when saving [a] file[s].
 + `events`: (Table): events that will trigger the plugin.
