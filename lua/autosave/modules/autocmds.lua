@@ -135,7 +135,7 @@ function M.load_autocommands()
 			autocmd!
 			autocmd ]] ..
             parse_events() ..
-                [[ * if (&modifiable == 1) | execute "lua require'autosave.modules.autocmds'.save()" | endif
+                [[ * execute "lua require'autosave.modules.autocmds'.save()"
 		augroup END
 	]],
         false
