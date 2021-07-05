@@ -4,6 +4,7 @@ local cmd = vim.cmd
 
 local opts = require("autosave.config").options
 local autosave = require("autosave")
+local default_event = "InsertLeave"
 
 local M = {}
 
@@ -77,24 +78,7 @@ local function assert_return(values, expected)
     return true
 end
 
-function M.do_save()
-    if (assert_return(assert_user_conditions(), true)) then
-        actual_save()
-    end
-end
-
-function M.save()
-
-	if (autosave.hook_before_saving ~= nil) then
-		autosave.hook_before_saving()
-	end
-
-    if (opts["write_all_buffers"] == true) then
-        cmd([[call g:AutoSaveBufDo("lua require'autosave.modules.autocmds'.do_save()")]])
-    else
-        M.do_save()
-    end
-
+function M.message_and_interval()
     if (get_modified() == true) then
         set_modified(false)
         if (opts["execution_message"] ~= "") then
@@ -108,6 +92,20 @@ function M.save()
             )
         end
     end
+end
+
+function M.do_save()
+    if (assert_return(assert_user_conditions(), true)) then
+        actual_save()
+    end
+end
+
+function M.save()
+	if (autosave.hook_before_saving ~= nil) then
+		autosave.hook_before_saving()
+	end
+
+	M.do_save()
 
 	if (autosave.hook_after_saving ~= nil) then
 		autosave.hook_after_saving()
@@ -117,8 +115,8 @@ end
 local function parse_events()
     local events = ""
 
-    if (next(opts["events"]) == nil) then
-        events = "InsertLeave"
+    if (next(opts["events"]) == nil or opts["events"] == nil) then
+        events = default_event
     else
         for event, _ in pairs(opts["events"]) do
             events = events .. opts["events"][event] .. ","
@@ -129,24 +127,36 @@ local function parse_events()
 end
 
 function M.load_autocommands()
-    api.nvim_exec(
-        [[
-		augroup autosave_save
-			autocmd!
-			autocmd ]] ..
-            parse_events() ..
-                [[ * execute "lua require'autosave.modules.autocmds'.save()"
-		augroup END
-	]],
-        false
-    )
+
+        -- cmd([[call g:AutoSaveBufDo("lua require'autosave.modules.autocmds'.do_save()")]])
+    if (opts["write_all_buffers"] == false) then
+		api.nvim_exec(
+			[[
+			aug autosave_save
+				au!
+				au ]] ..
+				parse_events() ..
+					[[ * execute "lua require'autosave.modules.autocmds'.save()" | execute "lua require'autosave.modules.autocmds'.message_and_interval()"
+			aug END
+		]],
+			false
+		)
+    else
+		local event_1 = opts["events"][1] or default_event
+		api.nvim_exec([[
+aug autosave_save
+	au!
+	au ]] .. parse_events() .. [[ * if !exists("g:autosave_changed") | let g:autosave_changed="t" | doautoall autosave_save ]] .. event_1 .. [[ | unlet g:autosave_changed | execute "lua require'autosave.modules.autocmds'.message_and_interval()" | else | execute "lua require'autosave.modules.autocmds'.save()" | endif
+aug END
+		]],false)
+	end
 end
 
 function M.unload_autocommands()
     api.nvim_exec([[
-		augroup autosave_save
-			autocmd!
-		augroup END
+		aug autosave_save
+			au!
+		aug END
 	]], false)
 end
 
