@@ -63,7 +63,7 @@ As it's stated in the TL;DR, there are already some sane defaults that you may l
 ```lua
 enabled = true,
 execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
-events = {"InsertLeave", "TextChanged"},
+events = {"InsertLeave"},
 conditions = {
 	exists = true,
 	filetype_is_not = {},
@@ -85,13 +85,13 @@ autosave.setup(
     {
         enabled = true,
         execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
-        events = {"InsertLeave", "TextChanged"},
+        events = {"InsertLeave"},
         conditions = {
             exists = true,
             filetype_is_not = {},
             modifiable = true
         },
-        write_all_buffers = true,
+        write_all_buffers = false,
         on_off_commands = true,
         clean_command_line_interval = 2500
     }
@@ -108,13 +108,13 @@ autosave.setup(
     {
         enabled = true,
         execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
-        events = {"InsertLeave", "TextChanged"},
+        events = {"InsertLeave"},
         conditions = {
             exists = true,
             filetype_is_not = {},
             modifiable = true
         },
-        write_all_buffers = true,
+        write_all_buffers = false,
         on_off_commands = true,
         clean_command_line_interval = 2500
     }
@@ -147,7 +147,7 @@ Although settings already have self-explanatory names, here is where you can fin
 
 ## General
 + `enabled:`: (Boolean) if true, enables AutoSave.nvim at startup (Note: this is not for loading the plugin it self but rather the "auto-save" functionality. This is like running `:ASOn`).
-+ `execution_message`: (String) message to be displayed when saving [a] file[s].
++ `execution_message`: (String) message to be displayed when saving [a] file[s]. If the string is empty, no message will be displayed.
 + `events`: (Table): events that will trigger the plugin.
 + `write_all_buffers`: (Boolean) if true, writes to all modifiable buffers that meet the `conditions`.
 + `on_off_commands`: (Boolean) if true, enables extra commands for toggling the plugin on and off (`:ASOn` and `:ASOff`).
@@ -162,14 +162,14 @@ These are the conditions that every file must meet so that it can be saved. If e
 ## Hooks
 Use them to execute code at certain events [described by their names]. These are the ones available:
 
-| Function             | Description                                                        |
-|----------------------|--------------------------------------------------------------------|
-| hook_before_on()     | Before toggling the plugin on                                      |
-| hook_after_on()      | After toggling the plugin on                                       |
-| hook_before_off()    | Before toggling the plugin off                                     |
-| hook_after_off()     | After toggling the plugin off                                      |
-| hook_before_saving() | Before its even checked if the current file(s) meet the conditions |
-| hook_after_saving    | After saving the file(s)                                           |
+| Function             | Description                                                          |
+|----------------------|----------------------------------------------------------------------|
+| hook_before_on()     | Before toggling the plugin on                                        |
+| hook_after_on()      | After toggling the plugin on                                         |
+| hook_before_off()    | Before toggling the plugin off                                       |
+| hook_after_off()     | After toggling the plugin off                                        |
+| hook_before_saving() | Before its even checked if the file meets the conditions to be saved |
+| hook_after_saving    | After successfully saving the file or not                            |
 
 They can be used like so:
 
@@ -191,4 +191,3 @@ AutoSave.nvim is released under the GPL v3.0 license. It grants open-source perm
 - The right to modify and distribute copies of new versions of the software
 
 For more convoluted language, see the [LICENSE file](https://github.com/Pocco81/AutoSave.nvim/blob/main/README.md).
-

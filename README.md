@@ -83,7 +83,8 @@
 # 📺 Notices
 Checkout the [CHANGELOG.md](https://github.com/Pocco81/AutoSave.nvim/blob/main/CHANGELOG.md) file for more information on the notices below:
 
-- **01-07-21**: Just released!
++ **04-07-21**: Fixed #1.
++ **01-07-21**: Just released!
 
 # 📦 Installation
 
@@ -121,7 +122,7 @@ As it's stated in the TL;DR, there are already some sane defaults that you may l
 ```lua
 enabled = true,
 execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
-events = {"InsertLeave", "TextChanged"},
+events = {"InsertLeave"},
 conditions = {
 	exists = true,
 	filetype_is_not = {},
@@ -145,7 +146,7 @@ autosave.setup(
     {
         enabled = true,
         execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
-        events = {"InsertLeave", "TextChanged"},
+        events = {"InsertLeave"},
         conditions = {
             exists = true,
             filetype_is_not = {},
@@ -173,7 +174,7 @@ autosave.setup(
     {
         enabled = true,
         execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
-        events = {"InsertLeave", "TextChanged"},
+        events = {"InsertLeave"},
         conditions = {
             exists = true,
             filetype_is_not = {},
