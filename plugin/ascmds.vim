@@ -6,9 +6,6 @@ if exists('g:loaded_autosave') | finish | endif
 let s:save_cpo = &cpo " save user coptions
 set cpo&vim " reset them to defaults
 
-" main {{{
-lua require('autosave.main').main('startup')
-" }}}
 
 " Interface {{{
 command! ASToggle lua require'autosave.main'.main('toggle')

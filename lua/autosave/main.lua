@@ -58,10 +58,6 @@ function M.main(option)
 		on()
 	elseif (option == 'off') then
 		off()
-	elseif (option == 'startup') then
-		if (opts["enabled"] == true) then
-			on()
-		end
 	end
 end
 
