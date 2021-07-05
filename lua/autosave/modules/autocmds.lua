@@ -101,15 +101,15 @@ function M.do_save()
 end
 
 function M.save()
-	if (autosave.hook_before_saving ~= nil) then
-		autosave.hook_before_saving()
-	end
+    if (autosave.hook_before_saving ~= nil) then
+        autosave.hook_before_saving()
+    end
 
-	M.do_save()
+    M.do_save()
 
-	if (autosave.hook_after_saving ~= nil) then
-		autosave.hook_after_saving()
-	end
+    if (autosave.hook_after_saving ~= nil) then
+        autosave.hook_after_saving()
+    end
 end
 
 local function parse_events()
@@ -127,29 +127,34 @@ local function parse_events()
 end
 
 function M.load_autocommands()
-
-        -- cmd([[call g:AutoSaveBufDo("lua require'autosave.modules.autocmds'.do_save()")]])
     if (opts["write_all_buffers"] == false) then
-		api.nvim_exec(
-			[[
+        api.nvim_exec(
+            [[
 			aug autosave_save
 				au!
 				au ]] ..
-				parse_events() ..
-					[[ * execute "lua require'autosave.modules.autocmds'.save()" | execute "lua require'autosave.modules.autocmds'.message_and_interval()"
+                parse_events() ..
+                    [[ * execute "lua require'autosave.modules.autocmds'.save()" | execute "lua require'autosave.modules.autocmds'.message_and_interval()"
 			aug END
 		]],
-			false
-		)
+            false
+        )
     else
-		local event_1 = opts["events"][1] or default_event
-		api.nvim_exec([[
-aug autosave_save
-	au!
-	au ]] .. parse_events() .. [[ * if !exists("g:autosave_changed") | let g:autosave_changed="t" | doautoall autosave_save ]] .. event_1 .. [[ | unlet g:autosave_changed | execute "lua require'autosave.modules.autocmds'.message_and_interval()" | else | execute "lua require'autosave.modules.autocmds'.save()" | endif
-aug END
-		]],false)
-	end
+        local event_1 = opts["events"][1] or default_event
+        api.nvim_exec(
+            [[
+			aug autosave_save
+				au!
+				au ]] ..
+                parse_events() ..
+                    [[ * if !exists("g:autosave_changed") | let g:autosave_changed="t" | doautoall autosave_save ]] ..
+                        event_1 ..
+                            [[ | unlet g:autosave_changed | execute "lua require'autosave.modules.autocmds'.message_and_interval()" | else | execute "lua require'autosave.modules.autocmds'.save()" | endif
+			aug END
+		]],
+            false
+        )
+    end
 end
 
 function M.unload_autocommands()
