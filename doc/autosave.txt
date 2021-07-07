@@ -1,4 +1,4 @@
-*AutoSave.nvim*						*AutoSave-help*		A NeoVim plugin for highlighting visual selections like in a normal document editor!
+*AutoSave.nvim*						*AutoSave-help*		A NeoVim plugin for saving your work before the world collapses or you type :qa!
 
 Author:		Pocco81 <https://github.com/Pocco81>
 License:	GPL-3.0 License
