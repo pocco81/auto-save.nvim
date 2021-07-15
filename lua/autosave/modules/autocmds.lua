@@ -6,6 +6,8 @@ local opts = require("autosave.config").options
 local autosave = require("autosave")
 local default_event = "InsertLeave"
 
+local modified
+
 local M = {}
 
 local function table_has_value(tbl, value)
@@ -27,7 +29,7 @@ local function get_modified()
 end
 
 local function actual_save()
-    -- might use  update, but in that case it can't be checekd if a file was modified and so it will always
+    -- might use  update, but in that case it can't be checked if a file was modified and so it will always
     -- print opts["execution_message"]
     if (api.nvim_eval([[&modified]]) == 1) then
         cmd("silent! write")
@@ -148,7 +150,7 @@ local function parse_events()
 end
 
 function M.load_autocommands()
-    if opts["debounce_delay"] == false then
+    if opts["debounce_delay"] == 0 then
         M.debounced_save = actual_save
     else
         M.debounced_save = debounce(actual_save, opts["debounce_delay"])
