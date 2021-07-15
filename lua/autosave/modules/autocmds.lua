@@ -34,6 +34,8 @@ local function actual_save()
         if (get_modified() == nil or get_modified() == false) then
             set_modified(true)
         end
+
+        M.message_and_interval()
     end
 end
 
@@ -94,9 +96,28 @@ function M.message_and_interval()
     end
 end
 
+local function debounce(fn, duration)
+  local queued = false
+
+  local function inner_debounce()
+    if not queued then
+      vim.defer_fn(
+        function()
+          queued = false
+          fn()
+        end,
+        duration
+      )
+      queued = true
+    end
+  end
+
+  return inner_debounce
+end
+
 function M.do_save()
     if (assert_return(assert_user_conditions(), true)) then
-        actual_save()
+        M.debounced_save()
     end
 end
 
@@ -127,6 +148,12 @@ local function parse_events()
 end
 
 function M.load_autocommands()
+    if opts["debounce_delay"] == false then
+        M.debounced_save = actual_save
+    else
+        M.debounced_save = debounce(actual_save, opts["debounce_delay"])
+    end
+
     if (opts["write_all_buffers"] == false) then
         api.nvim_exec(
             [[
@@ -134,7 +161,7 @@ function M.load_autocommands()
 				au!
 				au ]] ..
                 parse_events() ..
-                    [[ * execute "lua require'autosave.modules.autocmds'.save()" | execute "lua require'autosave.modules.autocmds'.message_and_interval()"
+                    [[ * execute "lua require'autosave.modules.autocmds'.save()"
 			aug END
 		]],
             false
@@ -149,7 +176,7 @@ function M.load_autocommands()
                 parse_events() ..
                     [[ * if !exists("g:autosave_changed") | let g:autosave_changed="t" | doautoall autosave_save ]] ..
                         event_1 ..
-                            [[ | unlet g:autosave_changed | execute "lua require'autosave.modules.autocmds'.message_and_interval()" | else | execute "lua require'autosave.modules.autocmds'.save()" | endif
+                            [[ | unlet g:autosave_changed | else | execute "lua require'autosave.modules.autocmds'.save()" | endif
 			aug END
 		]],
             false

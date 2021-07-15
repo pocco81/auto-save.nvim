@@ -130,7 +130,8 @@ conditions = {
 },
 write_all_buffers = false,
 on_off_commands = false,
-clean_command_line_interval = 0
+clean_command_line_interval = 0,
+debounce_delay = 140
 ```
 
 The way you setup the settings on your config varies on whether you are using vimL for this or Lua.
@@ -154,7 +155,8 @@ autosave.setup(
         },
         write_all_buffers = false,
         on_off_commands = true,
-        clean_command_line_interval = 2500
+        clean_command_line_interval = 2500,
+        debounce_delay = 140
     }
 )
 ```
@@ -182,7 +184,8 @@ autosave.setup(
         },
         write_all_buffers = false,
         on_off_commands = true,
-        clean_command_line_interval = 2500
+        clean_command_line_interval = 2500,
+        debounce_delay = 140
     }
 )
 EOF
@@ -218,6 +221,7 @@ Although settings already have self-explanatory names, here is where you can fin
 + `write_all_buffers`: (Boolean) if true, writes to all modifiable buffers that meet the `conditions`.
 + `on_off_commands`: (Boolean) if true, enables extra commands for toggling the plugin on and off (`:ASOn` and `:ASOff`).
 + `clean_command_line_interval` (Integer) if greater than 0, cleans the command line after *x* amount of milliseconds after printing the `execution_message`.
++ `debounce_delay` (Integer) if greater than 0, saves the file at most every `debounce_delay` milliseconds. This can improve editing performance. If 0 then saves are performed immediately on each edit. Default `140`, which is just long enough to reduce unnecessary saves, but short enough that you don't notice the delay.
 
 ## Conditions
 These are the conditions that every file must meet so that it can be saved. If every file to be auto-saved doesn't meet all of the conditions it won't be saved.

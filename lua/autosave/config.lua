@@ -11,7 +11,8 @@ config.options = {
 	},
     write_all_buffers = false,
     on_off_commands = false,
-	clean_command_line_interval = 0
+    clean_command_line_interval = 0,
+    debounce_delay = 140
 }
 
 function config.set_options(opts)
