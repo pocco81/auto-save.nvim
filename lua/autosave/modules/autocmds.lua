@@ -32,13 +32,13 @@ local function actual_save()
     -- might use  update, but in that case it can't be checked if a file was modified and so it will always
     -- print opts["execution_message"]
     if (api.nvim_eval([[&modified]]) == 1) then
-        local first_char_pos = vim.fn.getpos("'[")
-        local last_char_pos = vim.fn.getpos("']")
+        local first_char_pos = fn.getpos("'[")
+        local last_char_pos = fn.getpos("']")
 
         cmd("silent! write")
 
-        vim.fn.setpos("'[", first_char_pos)
-        vim.fn.setpos("']", last_char_pos)
+        fn.setpos("'[", first_char_pos)
+        fn.setpos("']", last_char_pos)
 
         if (get_modified() == nil or get_modified() == false) then
             set_modified(true)
@@ -105,7 +105,7 @@ function M.message_and_interval()
     end
 end
 
-local function debounce(fn, duration)
+local function debounce(lfn, duration)
   local queued = false
 
   local function inner_debounce()
@@ -113,7 +113,7 @@ local function debounce(fn, duration)
       vim.defer_fn(
         function()
           queued = false
-          fn()
+          lfn()
         end,
         duration
       )
