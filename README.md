@@ -83,7 +83,7 @@
 # 📺 Notices
 Checkout the [CHANGELOG.md](https://github.com/Pocco81/AutoSave.nvim/blob/main/CHANGELOG.md) file for more information on the notices below:
 
-+ **15-07-21**: Implemented debounce_delay setting thanks to #7.
++ **15-07-21**: Implemented debounce_delay setting thanks to #7 and "Preserve cursor marks" feature when saving thanks to #8.
 + **04-07-21**: Fixed #1.
 + **01-07-21**: Just released!
 
