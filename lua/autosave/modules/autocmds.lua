@@ -113,17 +113,11 @@ function M.save()
 end
 
 local function parse_events()
-    local events = ""
-
     if (next(opts["events"]) == nil or opts["events"] == nil) then
-        events = default_event
+        return default_event
     else
-        for event, _ in pairs(opts["events"]) do
-            events = events .. opts["events"][event] .. ","
-        end
+        return table.concat(opts["events"], ",")
     end
-
-    return events
 end
 
 function M.load_autocommands()

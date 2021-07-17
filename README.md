@@ -122,7 +122,7 @@ As it's stated in the TL;DR, there are already some sane defaults that you may l
 ```lua
 enabled = true,
 execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
-events = {"InsertLeave"},
+events = {"InsertLeave", "TextChanged"},
 conditions = {
 	exists = true,
 	filetype_is_not = {},
@@ -146,7 +146,7 @@ autosave.setup(
     {
         enabled = true,
         execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
-        events = {"InsertLeave"},
+        events = {"InsertLeave", "TextChanged"},
         conditions = {
             exists = true,
             filetype_is_not = {},
@@ -174,7 +174,7 @@ autosave.setup(
     {
         enabled = true,
         execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
-        events = {"InsertLeave"},
+        events = {"InsertLeave", "TextChanged"},
         conditions = {
             exists = true,
             filetype_is_not = {},
