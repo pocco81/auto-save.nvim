@@ -222,7 +222,7 @@ Although settings already have self-explanatory names, here is where you can fin
 + `write_all_buffers`: (Boolean) if true, writes to all modifiable buffers that meet the `conditions`.
 + `on_off_commands`: (Boolean) if true, enables extra commands for toggling the plugin on and off (`:ASOn` and `:ASOff`).
 + `clean_command_line_interval` (Integer) if greater than 0, cleans the command line after *x* amount of milliseconds after printing the `execution_message`.
-+ `debounce_delay` (Integer) if greater than 0, saves the file at most every `debounce_delay` milliseconds, vastly improving editing performance. If 0 then saves are performed immediately after `events` occur. It's recommend to leave the default value (`130`), which is just long enough to reduce unnecessary saves, but short enough that you don't notice the delay.
++ `debounce_delay` (Integer) if greater than 0, saves the file at most every `debounce_delay` milliseconds, vastly improving editing performance. If 0 then saves are performed immediately after `events` occur. It's recommend to leave the default value (`135`), which is just long enough to reduce unnecessary saves, but short enough that you don't notice the delay.
 
 ## Conditions
 These are the conditions that every file must meet so that it can be saved. If every file to be auto-saved doesn't meet all of the conditions it won't be saved.
