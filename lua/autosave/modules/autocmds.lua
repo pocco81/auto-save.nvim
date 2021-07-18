@@ -4,7 +4,7 @@ local cmd = vim.cmd
 
 local opts = require("autosave.config").options
 local autosave = require("autosave")
-local default_event = "InsertLeave"
+local default_events = {"InsertLeave", "TextChanged"}
 
 local M = {}
 
@@ -112,12 +112,16 @@ function M.save()
     end
 end
 
+local function events()
+  if (next(opts["events"]) == nil or opts["events"] == nil) then
+    return default_events
+  else
+    return opts["events"]
+  end
+end
+
 local function parse_events()
-    if (next(opts["events"]) == nil or opts["events"] == nil) then
-        return default_event
-    else
-        return table.concat(opts["events"], ",")
-    end
+  return table.concat(events(), ",")
 end
 
 function M.load_autocommands()
@@ -134,7 +138,7 @@ function M.load_autocommands()
             false
         )
     else
-        local event_1 = opts["events"][1] or default_event
+        local event_1 = events()[1]
         api.nvim_exec(
             [[
 			aug autosave_save
