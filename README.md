@@ -67,6 +67,7 @@
 	* [General](#general)
 	* [Conditions](#conditions)
 	* [Hooks](#hooks)
+	* [Recommendations](#recommendations)
 * [Contribute](#-contribute)
 * [Inspirations](#-inspirations)
 * [License](#-license)
@@ -251,6 +252,9 @@ autosave.hook_after_off = function ()
 	print("I was toggled off!")
 end
 ```
+
+## Recommendations
++ Many other plugins/stuff that you may use rely on using the same events as the ones AutoSave uses by default or may need to interact with the buffer before it's saved. Mainly being plugins for snippets support. If this is your case, consider increasing the `debounce_delay` setting to your needs.
 
 # 🙋 FAQ
 
