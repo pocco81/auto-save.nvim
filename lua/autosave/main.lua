@@ -3,6 +3,7 @@ local cmd = vim.cmd
 local opts = require("autosave.config").options
 local autocmds = require("autosave.modules.autocmds")
 local autosave = require("autosave")
+local status_autosave
 
 require("autosave.utils.viml_funcs")
 
