@@ -6,6 +6,7 @@ config.options = {
     events = {"InsertLeave", "TextChanged"},
 	conditions = {
 		exists = true,
+		filename_is_not = {},
 		filetype_is_not = {},
 		modifiable = true,
 	},
