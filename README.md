@@ -127,6 +127,7 @@ execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
 events = {"InsertLeave", "TextChanged"},
 conditions = {
 	exists = true,
+	filename_is_not = {},
 	filetype_is_not = {},
 	modifiable = true,
 },
@@ -152,6 +153,7 @@ autosave.setup(
         events = {"InsertLeave", "TextChanged"},
         conditions = {
             exists = true,
+            filename_is_not = {},
             filetype_is_not = {},
             modifiable = true
         },
@@ -181,6 +183,7 @@ autosave.setup(
         events = {"InsertLeave", "TextChanged"},
         conditions = {
             exists = true,
+            filename_is_not = {},
             filetype_is_not = {},
             modifiable = true
         },
@@ -229,6 +232,7 @@ Although settings already have self-explanatory names, here is where you can fin
 These are the conditions that every file must meet so that it can be saved. If every file to be auto-saved doesn't meet all of the conditions it won't be saved.
 + `exists`: (Boolean) if true, enables this condition. If the file doesn't exist it won't save it (e.g. if you `nvim stuff.txt` and don't save the file then this condition won't be met)
 + `modifiable`: (Boolean) if true, enables this condition. If the file isn't modifiable, then this condition isn't met.
++ `filename_is_not`: (Table, Strings) if there is one or more filenames (should be strings) in the table, it enables this condition. Use this to exclude filenames that you don't want to automatically save.
 + `filetype_is_not`: (Table, Strings) if there is one or more filetypes (should be strings) in the table, it enables this condition. Use this to exclude filetypes that you don't want to automatically save.
 
 ## Hooks
