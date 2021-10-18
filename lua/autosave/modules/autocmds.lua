@@ -140,9 +140,15 @@ function M.do_save()
 end
 
 function M.save()
+    vim.g.auto_save_abort = false
+
 	if autosave.hook_before_saving ~= nil then
 		autosave.hook_before_saving()
 	end
+
+    if vim.g.auto_save_abort then
+        return
+    end
 
 	M.do_save()
 

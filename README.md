@@ -257,6 +257,18 @@ autosave.hook_after_off = function ()
 end
 ```
 
+The `hook_before_saving` hook can be used to abort saving based on some condition:
+
+```lua
+local autosave = require("autosave")
+
+autosave.hook_before_saving = function ()
+    if <condition> then
+        vim.g.auto_save_abort = true -- Save will be aborted
+    end
+end
+```
+
 ## Recommendations
 + Many other plugins/stuff that you may use rely on using the same events as the ones AutoSave uses by default or may need to interact with the buffer before it's saved. Mainly being plugins for snippets support. If this is your case, consider increasing the `debounce_delay` setting to your needs.
 

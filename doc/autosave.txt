@@ -189,6 +189,18 @@ autosave.hook_after_off = function ()
 end
 ```
 
+The `hook_before_saving` hook can be used to abort saving based on some condition:
+
+```lua
+local autosave = require("autosave")
+
+autosave.hook_before_saving = function ()
+    if <condition> then
+        vim.g.auto_save_abort = true -- Save will be aborted
+    end
+end
+```
+
 # License										*AutoSave-license*
 
 AutoSave.nvim is released under the GPL v3.0 license. It grants open-source permissions for users including:
