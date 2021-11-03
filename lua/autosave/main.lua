@@ -1,22 +1,8 @@
-local cmd = vim.cmd
-
-local opts = require("autosave.config").options
 local autocmds = require("autosave.modules.autocmds")
 local autosave = require("autosave")
-local status_autosave
-
-require("autosave.utils.viml_funcs")
-
+local g = vim.g
 local M = {}
-
-
-local function set_status(value)
-	status_autosave = value
-end
-
-local function get_status()
-	return status_autosave
-end
+require("autosave.utils.viml_funcs")
 
 local function on()
 
@@ -25,7 +11,7 @@ local function on()
 	end
 
 	autocmds.load_autocommands()
-	set_status('on')
+	g.autosave_state = true
 
 	if (autosave.hook_after_on ~= nil) then
 		autosave.hook_after_on()
@@ -39,7 +25,7 @@ local function off()
 	end
 
 	autocmds.unload_autocommands()
-	set_status('off')
+	g.autosave_state = false
 
 	if (autosave.hook_after_off ~= nil) then
 		autosave.hook_after_off()
@@ -50,7 +36,7 @@ function M.main(option)
 	option = option or 'load'
 
 	if (option == 'toggle') then
-		if (get_status() == 'on') then
+		if (g.autosave_state == true) then
 			off()
 		else
 			on()
