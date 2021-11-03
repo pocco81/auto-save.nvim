@@ -60,9 +60,11 @@
 		* [For init.lua](#for-initlua)
 		* [For init.vim](#for-initvim)
 	* [Updating](#updating)
-* [Usage (commands)](#-usage-commands)
-	* [Default](#default)
-	* [Extra](#extra)
+* [Usage](#-usage)
+	* [Commands](#commands)
+		* [Default](#default)
+		* [Extra](#extra)
+	* [General](#general)
 * [Configuration](#-configuration)
 	* [General](#general)
 	* [Conditions](#conditions)
@@ -206,15 +208,20 @@ This depends on your plugin manager. If, for example, you are using Packer.nvim,
 :PackerUpdate
 ```
 
-# 🤖 Usage (commands)
+# 🤖 Usage
+
+## Commands
 All the commands follow the *camel casing* naming convention and have the `AS` prefix so that it's easy to remember that they are part of this plugin. These are all of them:
 
-## Default
+### Default
 + `:ASToggle`: toggles AutoSave.nvim on and off.
 
-## Extra
+### Extra
 + `:ASOn`: turns AutoSave.nvim on.
 + `:ASOff`: turns AutoSave.nvim off.
+
+## General
++ `vim.g.autosave_state`: use this to check whether AutoSave is on (`true`) or off (`false`).
 
 # 🐬 Configuration
 Although settings already have self-explanatory names, here is where you can find info about each one of them and their classifications!
