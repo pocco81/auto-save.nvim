@@ -36,9 +36,9 @@ local function actual_save()
 		local last_char_pos = fn.getpos("']")
 
 		if opts["write_all_buffers"] then
-			cmd("silent! wall")
+			cmd("silent! noa wall")
 		else
-			cmd("silent! write")
+			cmd("silent! noa write")
 		end
 
 		fn.setpos("'[", first_char_pos)
