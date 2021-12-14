@@ -103,8 +103,9 @@ end
 function M.message_and_interval()
 	if get_modified() == true then
 		set_modified(false)
-		if opts["execution_message"] ~= "" then
-			print(opts["execution_message"])
+		local execution_message = opts["execution_message"]
+		if execution_message ~= "" then
+			print(type(execution_message) == "function" and execution_message() or execution_message)
 		end
 
 		if opts["clean_command_line_interval"] > 0 then
