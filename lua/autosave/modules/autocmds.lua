@@ -32,6 +32,14 @@ local function actual_save()
 	-- might use  update, but in that case it can't be checked if a file was modified and so it will always
 	-- print opts["execution_message"]
 	if api.nvim_eval([[&modified]]) == 1 then
+		if autosave.hook_before_actual_saving ~= nil then
+			autosave.hook_before_actual_saving()
+		end
+
+		if vim.g.auto_save_abort then
+			return
+		end
+
 		local first_char_pos = fn.getpos("'[")
 		local last_char_pos = fn.getpos("']")
 

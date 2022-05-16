@@ -248,14 +248,15 @@ These are the conditions that every file must meet so that it can be saved. If e
 ## Hooks
 Use them to execute code at certain events [described by their names]. These are the ones available:
 
-| Function             | Description                                                        |
-|----------------------|--------------------------------------------------------------------|
-| hook_before_on()     | Before toggling the plugin on                                      |
-| hook_after_on()      | After toggling the plugin on                                       |
-| hook_before_off()    | Before toggling the plugin off                                     |
-| hook_after_off()     | After toggling the plugin off                                      |
-| hook_before_saving() | Before its even checked if the current file(s) meet the conditions |
-| hook_after_saving    | After saving the file(s)                                           |
+| Function                    | Description                                                        |
+|-----------------------------|--------------------------------------------------------------------|
+| hook_before_on()            | Before toggling the plugin on                                      |
+| hook_after_on()             | After toggling the plugin on                                       |
+| hook_before_off()           | Before toggling the plugin off                                     |
+| hook_after_off()            | After toggling the plugin off                                      |
+| hook_before_saving()        | Before its even checked if the current file(s) meet the conditions |
+| hook_after_saving()         | After saving the file(s)                                           |
+| hook_before_actual_saving() | Before actual saving (after `debounce_delay`)                      |
 
 They can be used like so:
 
@@ -267,7 +268,7 @@ autosave.hook_after_off = function ()
 end
 ```
 
-The `hook_before_saving` hook can be used to abort saving based on some condition:
+The `hook_before_saving`/`hook_before_actual_saving` hooks can be used to abort saving based on some condition:
 
 ```lua
 local autosave = require("autosave")
