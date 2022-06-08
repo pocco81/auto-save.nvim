@@ -2,7 +2,11 @@ local config = {}
 
 config.options = {
     enabled = true,
-    execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
+    execution_message = function (buf)
+        return ("AutoSave: saved "
+            .. (buf == nil and '*' or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ':t'))
+            .. " at " .. vim.fn.strftime("%H:%M:%S"))
+    end,
     events = {"InsertLeave", "TextChanged"},
 	conditions = {
 		exists = true,

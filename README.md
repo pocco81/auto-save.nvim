@@ -125,8 +125,10 @@ NeoBundleFetch 'Pocco81/AutoSave.nvim'
 As it's stated in the TL;DR, there are already some sane defaults that you may like, however you can change them to match your taste. These are the defaults:
 ```lua
 enabled = true,
-execution_message = function ()
-  return "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S")
+execution_message = function (buf)
+  return ("AutoSave: saved "
+    .. buf == nil and '*' or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ':t')
+    .. " at " .. vim.fn.strftime("%H:%M:%S"))
 end,
 -- execution_message = "Saved",
 events = {"InsertLeave", "TextChanged"},
@@ -154,7 +156,11 @@ local autosave = require("autosave")
 autosave.setup(
     {
         enabled = true,
-        execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
+        execution_message = function (buf)
+            return ("AutoSave: saved "
+                .. buf == nil and '*' or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ':t')
+                .. " at " .. vim.fn.strftime("%H:%M:%S"))
+        end,
         events = {"InsertLeave", "TextChanged"},
         conditions = {
             exists = true,
@@ -184,7 +190,11 @@ local autosave = require("autosave")
 autosave.setup(
     {
         enabled = true,
-        execution_message = "AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"),
+        execution_message = function (buf)
+            return ("AutoSave: saved "
+                .. buf == nil and '*' or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ':t')
+                .. " at " .. vim.fn.strftime("%H:%M:%S"))
+        end,
         events = {"InsertLeave", "TextChanged"},
         conditions = {
             exists = true,

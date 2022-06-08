@@ -6,7 +6,7 @@ local opts = require("autosave.config").options
 local autosave = require("autosave")
 local default_events = { "InsertLeave", "TextChanged" }
 
-local modified
+local global_vars = {}
 
 local M = {}
 
@@ -20,35 +20,46 @@ local function table_has_value(tbl, value)
 	return false
 end
 
-local function set_modified(value)
-	modified = value
+local function set_buf_var(buf, name, value)
+    if buf == nil then
+        global_vars[name] = value
+    else
+        vim.api.nvim_buf_set_var(buf, 'autosave_' .. name, value)
+    end
 end
 
-local function get_modified()
-	return modified
+local function get_buf_var(buf, name)
+    if buf == nil then
+        return global_vars[name]
+    end
+    local success, mod = pcall(vim.api.nvim_buf_get_var, buf, 'autosave_' .. name)
+    return success and mod or nil
 end
 
-local function actual_save()
+local function actual_save(buf)
 	-- might use  update, but in that case it can't be checked if a file was modified and so it will always
 	-- print opts["execution_message"]
-	if api.nvim_eval([[&modified]]) == 1 then
+	buf = buf or vim.api.nvim_get_current_buf()
+	if vim.api.nvim_buf_get_option(buf, 'modified') then
 		local first_char_pos = fn.getpos("'[")
 		local last_char_pos = fn.getpos("']")
 
 		if opts["write_all_buffers"] then
 			cmd("silent! wall")
 		else
-			cmd("silent! write")
+			vim.api.nvim_buf_call(buf, function () cmd("silent! write") end)
 		end
 
 		fn.setpos("'[", first_char_pos)
 		fn.setpos("']", last_char_pos)
 
-		if get_modified() == nil or get_modified() == false then
-			set_modified(true)
+        local buf_saved = not opts["write_all_buffers"] and buf or nil
+
+		if get_buf_var(buf_saved, 'modified') == nil or get_buf_var(buf_saved, 'modified') == false then
+			set_buf_var(buf_saved, 'modified', true)
 		end
 
-		M.message_and_interval()
+		M.message_and_interval(buf_saved)
 	end
 end
 
@@ -100,34 +111,34 @@ local function assert_return(values, expected)
 	return true
 end
 
-function M.message_and_interval()
-	if get_modified() == true then
-		set_modified(false)
+function M.message_and_interval(buf)
+	if get_buf_var(buf, 'modified') == true then
+		set_buf_var(buf, 'modified', false)
 		local execution_message = opts["execution_message"]
 		if execution_message ~= "" then
-			print(type(execution_message) == "function" and execution_message() or execution_message)
+			print(type(execution_message) == "function" and execution_message(buf) or execution_message)
+            M.last_notified_buf = buf
 		end
 
 		if opts["clean_command_line_interval"] > 0 then
 			cmd(
 				[[call timer_start(]]
 					.. opts["clean_command_line_interval"]
-					.. [[, funcref('g:AutoSaveClearCommandLine'))]]
+					.. [[, funcref('g:AutoSaveClearCommandLine', []] .. (buf or 'v:null') .. [[]))]]
 			)
 		end
 	end
 end
 
 local function debounce(lfn, duration)
-	local queued = false
-
 	local function inner_debounce()
-		if not queued then
+        local buf = vim.api.nvim_get_current_buf()
+		if not get_buf_var(buf, 'queued') then
 			vim.defer_fn(function()
-				queued = false
-				lfn()
+                set_buf_var(buf, 'queued', false)
+				lfn(buf)
 			end, duration)
-			queued = true
+            set_buf_var(buf, 'queued', true)
 		end
 	end
 
