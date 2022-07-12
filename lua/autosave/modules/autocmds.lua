@@ -53,7 +53,7 @@ local function actual_save()
 end
 
 local function assert_user_conditions()
-	local sc_exists, sc_filename, sc_filetype, sc_modifiable = true, true, true, true
+	local sc_exists, sc_filename, sc_filetype_is_not, sc_filetype_is, sc_modifiable = true, true, true, true, true
 
 	for condition, value in pairs(opts["conditions"]) do
 		if condition == "exists" then
@@ -80,14 +80,21 @@ local function assert_user_conditions()
 		elseif condition == "filetype_is_not" then
 			if not (next(opts["conditions"]["filetype_is_not"]) == nil) then
 				if table_has_value(opts["conditions"]["filetype_is_not"], api.nvim_eval([[&filetype]])) == true then
-					sc_filetype = false
+					sc_filetype_is_not = false
+					break
+				end
+			end
+		elseif condition == "filetype_is" then
+			if not (next(opts["conditions"]["filetype_is"]) == nil) then
+				if table_has_value(opts["conditions"]["filetype_is"], api.nvim_eval([[&filetype]])) == false then
+					sc_filetype_is = false
 					break
 				end
 			end
 		end
 	end
 
-	return { sc_exists, sc_filename, sc_filetype, sc_modifiable }
+	return { sc_exists, sc_filename, sc_filetype_is_not, sc_filetype_is, sc_modifiable }
 end
 
 local function assert_return(values, expected)

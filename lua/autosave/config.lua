@@ -8,6 +8,7 @@ config.options = {
 		exists = true,
 		filename_is_not = {},
 		filetype_is_not = {},
+		filetype_is = {},
 		modifiable = true,
 	},
     write_all_buffers = false,

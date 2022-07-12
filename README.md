@@ -244,6 +244,7 @@ These are the conditions that every file must meet so that it can be saved. If e
 + `modifiable`: (Boolean) if true, enables this condition. If the file isn't modifiable, then this condition isn't met.
 + `filename_is_not`: (Table, Strings) if there is one or more filenames (should be strings) in the table, it enables this condition. Use this to exclude filenames that you don't want to automatically save.
 + `filetype_is_not`: (Table, Strings) if there is one or more filetypes (should be strings) in the table, it enables this condition. Use this to exclude filetypes that you don't want to automatically save.
++ `filetype_is`: (Table, Strings) if there is one or more filetypes (should be strings) in the table, it enables this condition. Use this to restrict the filetypes that are autosaved to only those specified.
 
 ## Hooks
 Use them to execute code at certain events [described by their names]. These are the ones available:
