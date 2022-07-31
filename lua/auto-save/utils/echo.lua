@@ -20,6 +20,6 @@ return function(msg, kind)
 			title = TITLE,
 		})
 	else
-		vim.notify(("%s (%s): %s"):format(TITLE, level.type, msg), level.log)
+		vim.notify(("%s: %s"):format(TITLE, msg), level.log)
 	end
 end

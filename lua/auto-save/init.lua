@@ -137,8 +137,10 @@ end
 function M.toggle()
 	if autosave_running then
 		M.off()
+		echo("off")
 	else
 		M.on()
+		echo("on")
 	end
 end
 
