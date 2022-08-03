@@ -10,6 +10,7 @@ local g = vim.g
 local fn = vim.fn
 local cmd = vim.cmd
 local o = vim.o
+local AUTO_SAVE_COLOR = "MsgArea"
 
 api.nvim_create_augroup("AutoSave", {
 	clear = true,
@@ -75,7 +76,7 @@ function M.save(buf)
 
 	callback("after_saving")
 
-	api.nvim_echo({ { (type(cnf.execution_message.message) == "function" and cnf.execution_message.message() or cnf.execution_message.message), 'AutoSaveText' } }, true, {})
+	api.nvim_echo({ { (type(cnf.execution_message.message) == "function" and cnf.execution_message.message() or cnf.execution_message.message), AUTO_SAVE_COLOR } }, true, {})
 	if cnf.execution_message.cleaning_interval > 0 then
 		fn.timer_start(
 			cnf.execution_message.cleaning_interval,
@@ -102,21 +103,25 @@ function M.on()
 		group = "AutoSave",
 	})
 
-	api.nvim_create_autocmd("VimEnter", {
+	api.nvim_create_autocmd({"ColorScheme"}, {
 		callback = function()
-			if cnf.execution_message.dim > 0 then
-				MSG_AREA = colors.get_hl("MsgArea")
-				MSG_AREA.background = (MSG_AREA.background or colors.get_hl("Normal")["background"])
-				local foreground = (
-					o.background == "dark" and
-						colors.darken((MSG_AREA.background or "#000000"), cnf.execution_message.dim, MSG_AREA.foreground) or
-						colors.lighten((MSG_AREA.background or "#ffffff"), cnf.execution_message.dim, MSG_AREA.foreground)
-					)
+			vim.schedule(function()
+				if cnf.execution_message.dim > 0 then
+					MSG_AREA = colors.get_hl("MsgArea")
+					MSG_AREA.background = (MSG_AREA.background or colors.get_hl("Normal")["background"])
+					local foreground = (
+						o.background == "dark" and
+							colors.darken((MSG_AREA.background or "#000000"), cnf.execution_message.dim, MSG_AREA.foreground) or
+							colors.lighten((MSG_AREA.background or "#ffffff"), cnf.execution_message.dim, MSG_AREA.foreground)
+						)
 
-				colors.highlight("AutoSaveText", { fg = foreground })
-			end
+					colors.highlight("AutoSaveText", { fg = foreground })
+					AUTO_SAVE_COLOR = "AutoSaveText"
+				end
+			end)
 		end,
 		once = true,
+		pattern = "*",
 		group = "AutoSave",
 	})
 
