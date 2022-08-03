@@ -103,7 +103,7 @@ function M.on()
 		group = "AutoSave",
 	})
 
-	api.nvim_create_autocmd({"ColorScheme"}, {
+	api.nvim_create_autocmd({"VimEnter", "ColorScheme"}, {
 		callback = function()
 			vim.schedule(function()
 				if cnf.execution_message.dim > 0 then
@@ -120,7 +120,6 @@ function M.on()
 				end
 			end)
 		end,
-		once = true,
 		pattern = "*",
 		group = "AutoSave",
 	})
