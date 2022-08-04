@@ -121,7 +121,8 @@ EOF
 }
 ```
 
-Additionally you may want to set up a key mapping to toggle auto-save:
+Additionally you may want to set up a key mapping to toggle auto-save: <br>
+**NOTE:** you should run `setup` firstly.
 
 ```lua
 vim.api.nvim_set_keymap("n", "<leader>n", ":ASToggle<CR>", {})
@@ -131,7 +132,16 @@ vim.api.nvim_set_keymap("n", "<leader>n", ":ASToggle<CR>", {})
 
 ### 🪴 Usage
 
-Besides running auto-save at startup (if you have `enabled = true` in your config), you may as well:
+Run `setup` function in your configuration, for example:
+```lua
+local as = require("auto-save")
+as.setup() -- with default options
+as.setup({ -- or with your options
+    write_all_buffers = true,
+})
+```
+
+Besides running auto-save (if you have `enabled = true` in your config), you may as well:
 
 - `ASToggle`: toggle auto-save
 
