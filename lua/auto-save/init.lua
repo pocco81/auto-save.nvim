@@ -145,7 +145,12 @@ function M.toggle()
 end
 
 function M.setup(custom_opts)
-	require("auto-save.config").set_options(custom_opts)
+    custom_opts = custom_opts or {}
+    cnf = vim.tbl_deep_extend("keep", custom_opts, cnf)
+
+    if cnf.enabled then
+        M.on()
+    end
 end
 
 return M
