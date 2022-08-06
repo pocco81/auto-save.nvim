@@ -1,6 +1,6 @@
 local M = {}
 
-local cnf = require("auto-save.config").options
+local cnf = require("auto-save.config").opts
 
 function M.set_of(list)
 	local set = {}

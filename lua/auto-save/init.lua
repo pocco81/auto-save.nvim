@@ -1,6 +1,6 @@
 local M = {}
 
-local cnf = require("auto-save.config").options
+local cnf = require("auto-save.config")
 local callback = require("auto-save.utils.data").do_callback
 local colors = require("auto-save.utils.colors")
 local echo = require("auto-save.utils.echo")
@@ -54,7 +54,7 @@ function M.save(buf)
 
 	callback("before_asserting_save")
 
-	if cnf.condition(buf) == false then
+	if cnf.opts.condition(buf) == false then
 		return
 	end
 
@@ -68,7 +68,7 @@ function M.save(buf)
 		return
 	end
 
-	if cnf.write_all_buffers then
+	if cnf.opts.write_all_buffers then
 		cmd("silent! wall")
 	else
 		api.nvim_buf_call(buf, function () cmd("silent! write") end)
@@ -76,10 +76,10 @@ function M.save(buf)
 
 	callback("after_saving")
 
-	api.nvim_echo({ { (type(cnf.execution_message.message) == "function" and cnf.execution_message.message() or cnf.execution_message.message), AUTO_SAVE_COLOR } }, true, {})
-	if cnf.execution_message.cleaning_interval > 0 then
+	api.nvim_echo({ { (type(cnf.opts.execution_message.message) == "function" and cnf.opts.execution_message.message() or cnf.opts.execution_message.message), AUTO_SAVE_COLOR } }, true, {})
+	if cnf.opts.execution_message.cleaning_interval > 0 then
 		fn.timer_start(
-			cnf.execution_message.cleaning_interval,
+			cnf.opts.execution_message.cleaning_interval,
 			function()
 				cmd([[echon '']])
 			end
@@ -87,7 +87,7 @@ function M.save(buf)
 	end
 end
 
-local save_func = (cnf.debounce_delay > 0 and debounce(M.save, cnf.debounce_delay) or M.save)
+local save_func = (cnf.opts.debounce_delay > 0 and debounce(M.save, cnf.opts.debounce_delay) or M.save)
 
 local function perform_save()
 	g.auto_save_abort = false
@@ -95,7 +95,7 @@ local function perform_save()
 end
 
 function M.on()
-	api.nvim_create_autocmd(cnf.trigger_events, {
+	api.nvim_create_autocmd(cnf.opts.trigger_events, {
 		callback = function()
 			perform_save()
 		end,
@@ -106,13 +106,13 @@ function M.on()
 	api.nvim_create_autocmd({"VimEnter", "ColorScheme"}, {
 		callback = function()
 			vim.schedule(function()
-				if cnf.execution_message.dim > 0 then
+				if cnf.opts.execution_message.dim > 0 then
 					MSG_AREA = colors.get_hl("MsgArea")
 					MSG_AREA.background = (MSG_AREA.background or colors.get_hl("Normal")["background"])
 					local foreground = (
 						o.background == "dark" and
-							colors.darken((MSG_AREA.background or "#000000"), cnf.execution_message.dim, MSG_AREA.foreground) or
-							colors.lighten((MSG_AREA.background or "#ffffff"), cnf.execution_message.dim, MSG_AREA.foreground)
+							colors.darken((MSG_AREA.background or "#000000"), cnf.opts.execution_message.dim, MSG_AREA.foreground) or
+							colors.lighten((MSG_AREA.background or "#ffffff"), cnf.opts.execution_message.dim, MSG_AREA.foreground)
 						)
 
 					colors.highlight("AutoSaveText", { fg = foreground })
@@ -149,7 +149,7 @@ function M.toggle()
 end
 
 function M.setup(custom_opts)
-	require("auto-save.config").set_options(custom_opts)
+	cnf:set_options(custom_opts)
 end
 
 return M
