@@ -11,6 +11,8 @@ local fn = vim.fn
 local cmd = vim.cmd
 local o = vim.o
 local AUTO_SAVE_COLOR = "MsgArea"
+local BLACK = "#000000"
+local WHITE = "#ffffff"
 
 api.nvim_create_augroup("AutoSave", {
 	clear = true,
@@ -103,20 +105,22 @@ function M.on()
 		group = "AutoSave",
 	})
 
-	api.nvim_create_autocmd({"VimEnter", "ColorScheme"}, {
+	api.nvim_create_autocmd({"VimEnter", "ColorScheme", "UIEnter"}, {
 		callback = function()
 			vim.schedule(function()
 				if cnf.opts.execution_message.dim > 0 then
 					MSG_AREA = colors.get_hl("MsgArea")
-					MSG_AREA.background = (MSG_AREA.background or colors.get_hl("Normal")["background"])
-					local foreground = (
-						o.background == "dark" and
-							colors.darken((MSG_AREA.background or "#000000"), cnf.opts.execution_message.dim, MSG_AREA.foreground) or
-							colors.lighten((MSG_AREA.background or "#ffffff"), cnf.opts.execution_message.dim, MSG_AREA.foreground)
-						)
+					if MSG_AREA.foreground ~= nil then
+						MSG_AREA.background = (MSG_AREA.background or colors.get_hl("Normal")["background"])
+						local foreground = (
+							o.background == "dark" and
+								colors.darken((MSG_AREA.background or BLACK), cnf.opts.execution_message.dim, MSG_AREA.foreground or BLACK) or
+								colors.lighten((MSG_AREA.background or WHITE), cnf.opts.execution_message.dim, MSG_AREA.foreground or WHITE)
+							)
 
-					colors.highlight("AutoSaveText", { fg = foreground })
-					AUTO_SAVE_COLOR = "AutoSaveText"
+						colors.highlight("AutoSaveText", { fg = foreground })
+						AUTO_SAVE_COLOR = "AutoSaveText"
+					end
 				end
 			end)
 		end,
