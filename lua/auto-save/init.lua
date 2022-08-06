@@ -107,12 +107,13 @@ function M.on()
 		callback = function()
 			vim.schedule(function()
 				if cnf.opts.execution_message.dim > 0 then
-					MSG_AREA = colors.get_hl("MsgArea")
+					MSG_AREA = colors.get_hl(AUTO_SAVE_COLOR)
+					MSG_AREA.foreground = (MSG_AREA.foreground or colors.get_hl("Normal")["foreground"])
 					MSG_AREA.background = (MSG_AREA.background or colors.get_hl("Normal")["background"])
 					local foreground = (
 						o.background == "dark" and
-							colors.darken((MSG_AREA.background or "#000000"), cnf.opts.execution_message.dim, MSG_AREA.foreground) or
-							colors.lighten((MSG_AREA.background or "#ffffff"), cnf.opts.execution_message.dim, MSG_AREA.foreground)
+							colors.darken((MSG_AREA.background or "#000000"), cnf.opts.execution_message.dim, (MSG_AREA.foreground or "#ffffff")) or
+							colors.lighten((MSG_AREA.background or "#ffffff"), cnf.opts.execution_message.dim, (MSG_AREA.foreground or "#000000"))
 						)
 
 					colors.highlight("AutoSaveText", { fg = foreground })

@@ -60,11 +60,13 @@ function M.blend(fg, bg, alpha)
 end
 
 function M.darken(hex, amount, bg)
-	return M.blend(hex, bg or M.bg, math.abs(amount))
+        bg = bg or "#000000"
+	return M.blend(hex, bg, math.abs(amount))
 end
 
 function M.lighten(hex, amount, fg)
-	return M.blend(hex, fg or M.fg, math.abs(amount))
+        fg = fg or "#ffffff"
+	return M.blend(hex, fg, math.abs(amount))
 end
 
 return M
