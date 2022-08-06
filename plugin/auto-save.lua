@@ -4,7 +4,7 @@ end
 vim.g.loaded_auto_save = true
 
 local command = vim.api.nvim_create_user_command
-local cnf = require("auto-save.config").options
+local cnf = require("auto-save.config").opts
 
 command("ASToggle", function()
 	require("auto-save").toggle()
