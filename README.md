@@ -103,7 +103,7 @@ EOF
 		local utils = require("auto-save.utils.data")
 
 		if
-			fn.getbufvar(buf, "&modifiable") == 1 or
+			fn.getbufvar(buf, "&modifiable") == 1 and
 			utils.not_in(fn.getbufvar(buf, "&filetype"), {}) then
 			return true -- met condition(s), can save
 		end
