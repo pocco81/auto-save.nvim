@@ -41,8 +41,10 @@ local function debounce(lfn, duration)
         local buf = api.nvim_get_current_buf()
 		if not get_buf_var(buf, 'queued') then
 			vim.defer_fn(function()
-                set_buf_var(buf, 'queued', false)
-				lfn(buf)
+                if api.nvim_buf_is_valid(buf) then
+                    set_buf_var(buf, 'queued', false)
+                    lfn(buf)
+                end
 			end, duration)
             set_buf_var(buf, 'queued', true)
 		end
