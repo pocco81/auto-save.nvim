@@ -78,14 +78,16 @@ function M.save(buf)
 
 	callback("after_saving")
 
-	api.nvim_echo({ { (type(cnf.opts.execution_message.message) == "function" and cnf.opts.execution_message.message() or cnf.opts.execution_message.message), AUTO_SAVE_COLOR } }, true, {})
-	if cnf.opts.execution_message.cleaning_interval > 0 then
-		fn.timer_start(
-			cnf.opts.execution_message.cleaning_interval,
-			function()
-				cmd([[echon '']])
-			end
-		)
+	if cnf.opts.execution_message.message ~= '' then
+		api.nvim_echo({ { (type(cnf.opts.execution_message.message) == "function" and cnf.opts.execution_message.message() or cnf.opts.execution_message.message), AUTO_SAVE_COLOR } }, true, {})
+		if cnf.opts.execution_message.cleaning_interval > 0 then
+			fn.timer_start(
+				cnf.opts.execution_message.cleaning_interval,
+				function()
+					cmd([[echon '']])
+				end
+			)
+		end
 	end
 end
 
