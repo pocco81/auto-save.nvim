@@ -19,7 +19,7 @@
 
 ### 📢 Disclaimer: Breaking Change
 
-This plugin has been renamed from `AutoSave` to `auto-save`, and this repository has accordingly moved from `pocco81/AutoSave.nvim` to `pocco81/auto-save.nvim`. To prevent errors with your configuration, make sure to update both the name and the repository url in your config! 
+This plugin has been renamed from `AutoSave` to `auto-save`, and this repository has accordingly moved from `pocco81/AutoSave.nvim` to `pocco81/auto-save.nvim`. To prevent errors with your configuration, make sure to update both the name and the repository url in your config! There are also breaking changes to the configuration options. Please see [issue #33](https://github.com/Pocco81/auto-save.nvim/issues/33) for more information.
 
 &nbsp;
 
