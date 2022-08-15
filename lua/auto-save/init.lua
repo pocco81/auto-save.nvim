@@ -24,13 +24,7 @@ local function set_buf_var(buf, name, value)
     if buf == nil then
         global_vars[name] = value
     else
-        local buffers = {}
-        local tabwins = vim.api.nvim_tabpage_list_wins(0)
-        for _, w in ipairs(tabwins) do
-            local buffer = vim.api.nvim_win_get_buf(w)
-            table.insert(buffers, buffer)
-        end
-        if vim.tbl_contains(buffers, buf) then
+        if api.nvim_buf_is_valid(buf) then
             api.nvim_buf_set_var(buf, "autosave_" .. name, value)
         end
     end
