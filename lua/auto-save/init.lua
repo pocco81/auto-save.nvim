@@ -21,30 +21,30 @@ api.nvim_create_augroup("AutoSave", {
 local global_vars = {}
 
 local function set_buf_var(buf, name, value)
-    if buf == nil then
-        global_vars[name] = value
-    else
-        api.nvim_buf_set_var(buf, 'autosave_' .. name, value)
-    end
+	if buf == nil then
+		global_vars[name] = value
+	else
+		api.nvim_buf_set_var(buf, 'autosave_' .. name, value)
+	end
 end
 
 local function get_buf_var(buf, name)
-    if buf == nil then
-        return global_vars[name]
-    end
-    local success, mod = pcall(api.nvim_buf_get_var, buf, 'autosave_' .. name)
-    return success and mod or nil
+	if buf == nil then
+		return global_vars[name]
+	end
+	local success, mod = pcall(api.nvim_buf_get_var, buf, 'autosave_' .. name)
+	return success and mod or nil
 end
 
 local function debounce(lfn, duration)
 	local function inner_debounce()
-        local buf = api.nvim_get_current_buf()
+		local buf = api.nvim_get_current_buf()
 		if not get_buf_var(buf, 'queued') then
 			vim.defer_fn(function()
-                set_buf_var(buf, 'queued', false)
+				set_buf_var(buf, 'queued', false)
 				lfn(buf)
 			end, duration)
-            set_buf_var(buf, 'queued', true)
+			set_buf_var(buf, 'queued', true)
 		end
 	end
 
