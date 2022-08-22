@@ -112,10 +112,13 @@ function M.save(buf)
 	end
 end
 
-local save_func = (cnf.opts.debounce_delay > 0 and debounce(M.save, cnf.opts.debounce_delay) or M.save)
+local save_func = nil
 
 local function perform_save()
 	g.auto_save_abort = false
+	if save_func == nil then
+		save_func = (cnf.opts.debounce_delay > 0 and debounce(M.save, cnf.opts.debounce_delay) or M.save)
+	end
 	save_func()
 end
 
