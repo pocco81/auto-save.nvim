@@ -24,7 +24,9 @@ local function set_buf_var(buf, name, value)
     if buf == nil then
         global_vars[name] = value
     else
-        api.nvim_buf_set_var(buf, 'autosave_' .. name, value)
+        if api.nvim_buf_is_valid(buf) then
+          api.nvim_buf_set_var(buf, 'autosave_' .. name, value)
+        end
     end
 end
 
