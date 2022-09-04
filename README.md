@@ -87,6 +87,7 @@ EOF
 ```lua
 {
     enabled = true, -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
+		noautocmd_save = false, -- prevent auto-save from triggering events like autoformatting
     execution_message = {
 		message = function() -- message to print on save
 			return ("AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"))

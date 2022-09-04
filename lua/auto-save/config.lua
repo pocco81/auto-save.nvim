@@ -1,7 +1,6 @@
 Config = {
 	opts = {
 		enabled = true, -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
-		noautocmd_save = false, -- prevent auto-save from triggering events like autoformatting
 		execution_message = {
 			message = function() -- message to print on save
 				return ("AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"))
@@ -23,6 +22,7 @@ Config = {
 			end
 			return false -- can't save
 		end,
+		noautocmd_save = false, -- prevent auto-save from triggering events like autoformatting
 		write_all_buffers = false, -- write all buffers when the current one meets `condition`
 		debounce_delay = 135, -- saves the file at most every `debounce_delay` milliseconds
 		callbacks = { -- functions to be executed at different intervals
