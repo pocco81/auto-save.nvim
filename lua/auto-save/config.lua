@@ -22,6 +22,7 @@ Config = {
 			end
 			return false -- can't save
 		end,
+		noautocmd_save = false, -- prevent auto-save from triggering events like autoformatting
 		write_all_buffers = false, -- write all buffers when the current one meets `condition`
 		debounce_delay = 135, -- saves the file at most every `debounce_delay` milliseconds
 		callbacks = { -- functions to be executed at different intervals

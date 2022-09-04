@@ -70,10 +70,16 @@ function M.save(buf)
 		return
 	end
 
+	local save_command_prefix = ""
+
+	if cnf.opts.noautocmd_save then
+		save_command_prefix = "noautocmd "
+	end
+
 	if cnf.opts.write_all_buffers then
-		cmd("silent! wall")
+		cmd(save_command_prefix .. "silent! wall")
 	else
-		api.nvim_buf_call(buf, function () cmd("silent! write") end)
+		api.nvim_buf_call(buf, function () cmd(save_command_prefix .. "silent! write") end)
 	end
 
 	callback("after_saving")
