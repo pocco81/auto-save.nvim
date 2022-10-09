@@ -99,7 +99,7 @@ end
 function M.on()
 	api.nvim_create_autocmd(cnf.opts.trigger_events, {
 		callback = function()
-			perform_save()
+			vim.defer_fn(perform_save, cnf.opts.write_delay)
 		end,
 		pattern = "*",
 		group = "AutoSave",
