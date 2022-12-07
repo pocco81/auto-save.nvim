@@ -82,6 +82,8 @@ function M.save(buf)
 
     callback("after_saving")
 
+    if not cnf.opts.print_enabled then return end
+
     api.nvim_echo(
         {
             {
