@@ -53,6 +53,17 @@ local function debounce(lfn, duration)
 	return inner_debounce
 end
 
+local function echo_execution_message()
+	local msg = type(cnf.opts.execution_message.message) == "function" and cnf.opts.execution_message.message()
+		or cnf.opts.execution_message.message
+	api.nvim_echo({ { msg, AUTO_SAVE_COLOR } }, true, {})
+	if cnf.opts.execution_message.cleaning_interval > 0 then
+		fn.timer_start(cnf.opts.execution_message.cleaning_interval, function()
+			cmd([[echon '']])
+		end)
+	end
+end
+
 function M.save(buf)
 	buf = buf or api.nvim_get_current_buf()
 
@@ -84,17 +95,6 @@ function M.save(buf)
 
 	if cnf.opts.execution_message.enabled == true then
 		echo_execution_message()
-	end
-end
-
-local function echo_execution_message()
-	local msg = type(cnf.opts.execution_message.message) == "function" and cnf.opts.execution_message.message()
-		or cnf.opts.execution_message.message
-	api.nvim_echo({ { msg, AUTO_SAVE_COLOR } }, true, {})
-	if cnf.opts.execution_message.cleaning_interval > 0 then
-		fn.timer_start(cnf.opts.execution_message.cleaning_interval, function()
-			cmd([[echon '']])
-		end)
 	end
 end
 
