@@ -88,22 +88,9 @@ function M.save(buf)
 end
 
 local function echo_execution_message()
-	local msg = type(cnf.opts.execution_message.message) == "function" and cnf.opts.execution_message.message() or cnf.opts.execution_message.message
+	local msg = type(cnf.opts.execution_message.message) == "function" and cnf.opts.execution_message.message()
+		or cnf.opts.execution_message.message
 	api.nvim_echo({ { msg, AUTO_SAVE_COLOR } }, true, {})
-	if cnf.opts.execution_message.cleaning_interval > 0 then
-		fn.timer_start(cnf.opts.execution_message.cleaning_interval, function()
-			cmd([[echon '']])
-		end)
-	end
-	api.nvim_echo({
-		{
-			(
-				type(cnf.opts.execution_message.message) == "function" and cnf.opts.execution_message.message()
-				or cnf.opts.execution_message.message
-			),
-			AUTO_SAVE_COLOR,
-		},
-	}, true, {})
 	if cnf.opts.execution_message.cleaning_interval > 0 then
 		fn.timer_start(cnf.opts.execution_message.cleaning_interval, function()
 			cmd([[echon '']])
