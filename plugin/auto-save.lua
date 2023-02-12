@@ -1,5 +1,5 @@
 if vim.g.loaded_auto_save then
-  return
+	return
 end
 vim.g.loaded_auto_save = true
 
