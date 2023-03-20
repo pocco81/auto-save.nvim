@@ -132,6 +132,11 @@ Besides running auto-save at startup (if you have `enabled = true` in your confi
 
 &nbsp;
 
+### 🤝 Contributing
+
+- All pull requests are welcome.
+- If you encounter bugs please open an issue.
+
 ### 👋 Acknowledgements
 
 This plugin wouldn't exist without [Pocco81](https://github.com/Pocco81)'s work on the [original](https://github.com/Pocco81/auto-save.nvim).
