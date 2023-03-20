@@ -17,12 +17,6 @@
 
 &nbsp;
 
-### 📢 Disclaimer: Breaking Change
-
-This plugin has been renamed from `AutoSave` to `auto-save`, and this repository has accordingly moved from `pocco81/AutoSave.nvim` to `pocco81/auto-save.nvim`. To prevent errors with your configuration, make sure to update both the name and the repository url in your config! 
-
-&nbsp;
-
 ### 📋 Features
 
 - automatically save your changes so the world doesn't collapse
