@@ -7,12 +7,12 @@
 </p>
 
 <p align="center">
-	<a href="https://github.com/Pocco81/auto-save.nvim/stargazers">
-		<img alt="Stars" src="https://img.shields.io/github/stars/Pocco81/auto-save.nvim?style=for-the-badge&logo=starship&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41"></a>
-	<a href="https://github.com/Pocco81/auto-save.nvim/issues">
-		<img alt="Issues" src="https://img.shields.io/github/issues/Pocco81/auto-save.nvim?style=for-the-badge&logo=bilibili&color=F5E0DC&logoColor=D9E0EE&labelColor=302D41"></a>
-	<a href="https://github.com/Pocco81/auto-save.nvim">
-		<img alt="Repo Size" src="https://img.shields.io/github/repo-size/Pocco81/auto-save.nvim?color=%23DDB6F2&label=SIZE&logo=codesandbox&style=for-the-badge&logoColor=D9E0EE&labelColor=302D41"/></a>
+	<a href="https://github.com/okuuva/auto-save.nvim/stargazers">
+		<img alt="Stars" src="https://img.shields.io/github/stars/okuuva/auto-save.nvim?style=for-the-badge&logo=starship&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41"></a>
+	<a href="https://github.com/okuuva/auto-save.nvim/issues">
+		<img alt="Issues" src="https://img.shields.io/github/issues/okuuva/auto-save.nvim?style=for-the-badge&logo=bilibili&color=F5E0DC&logoColor=D9E0EE&labelColor=302D41"></a>
+	<a href="https://github.com/okuuva/auto-save.nvim">
+		<img alt="Repo Size" src="https://img.shields.io/github/repo-size/okuuva/auto-save.nvim?color=%23DDB6F2&label=SIZE&logo=codesandbox&style=for-the-badge&logoColor=D9E0EE&labelColor=302D41"/></a>
 </p>
 
 &nbsp;
@@ -45,7 +45,7 @@ Install the plugin with your favourite package manager:
 
 ```lua
 use({
-	"Pocco81/auto-save.nvim",
+	"okuuva/auto-save.nvim",
 	config = function()
 		 require("auto-save").setup {
 			-- your config goes here
@@ -61,7 +61,7 @@ use({
 	<summary><a href="https://github.com/junegunn/vim-plug">vim-plug</a></summary>
 
 ```vim
-Plug 'Pocco81/auto-save.nvim'
+Plug 'okuuva/auto-save.nvim'
 lua << EOF
 	require("auto-save").setup {
 		-- your config goes here
@@ -129,5 +129,11 @@ vim.api.nvim_set_keymap("n", "<leader>n", ":ASToggle<CR>", {})
 Besides running auto-save at startup (if you have `enabled = true` in your config), you may as well:
 
 - `ASToggle`: toggle auto-save
+
+&nbsp;
+
+### 👋 Acknowledgements
+
+This plugin wouldn't exist without [Pocco81](https://github.com/Pocco81)'s work on the [original](https://github.com/Pocco81/auto-save.nvim).
 
 &nbsp;
