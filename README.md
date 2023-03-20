@@ -41,6 +41,23 @@
 Install the plugin with your favourite package manager:
 
 <details>
+	<summary><a href="https://github.com/folke/lazy.nvim">Lazy.nvim</a></summary>
+
+```lua
+{
+	"okuuva/auto-save.nvim",
+	cmd = "ASToggle", -- optional for lazy loading on command
+	event = { "InsertLeave", "TextChanged" } -- optional for lazy loading on trigger events
+	opts = {
+		-- your config goes here
+		-- or just leave it empty :)
+	},
+},
+```
+
+</details>
+
+<details>
 	<summary><a href="https://github.com/wbthomason/packer.nvim">Packer.nvim</a></summary>
 
 ```lua
@@ -120,6 +137,19 @@ Additionally you may want to set up a key mapping to toggle auto-save:
 
 ```lua
 vim.api.nvim_set_keymap("n", "<leader>n", ":ASToggle<CR>", {})
+```
+
+or as part of the `lazy.nvim` plugin spec:
+
+```lua
+{
+	"okuuva/auto-save.nvim",
+	keys = {
+		{ "<leader>n", ":ASToggle<CR>", desc = "Toggle auto-save" },
+	},
+	...
+},
+
 ```
 
 &nbsp;
