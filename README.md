@@ -15,8 +15,6 @@
     <img alt="Repo Size" src="https://img.shields.io/github/repo-size/okuuva/auto-save.nvim?color=%23DDB6F2&label=SIZE&logo=codesandbox&style=for-the-badge&logoColor=D9E0EE&labelColor=302D41"/></a>
 </p>
 
-&nbsp;
-
 ### 📋 Features
 
 - automatically save your changes so the world doesn't collapse
@@ -28,13 +26,9 @@
 - multiple callbacks
 - automatically clean the message area
 
-&nbsp;
-
 ### 📚 Requirements
 
 - Neovim >= 0.5.0
-
-&nbsp;
 
 ### 📦 Installation
 
@@ -88,8 +82,6 @@ EOF
 ```
 
 </details>
-
-&nbsp;
 
 ### ⚙️ Configuration
 
@@ -156,23 +148,19 @@ or as part of the `lazy.nvim` plugin spec:
 
 ```
 
-&nbsp;
-
 ### 🪴 Usage
 
 Besides running auto-save at startup (if you have `enabled = true` in your config), you may as well:
 
 - `ASToggle`: toggle auto-save
 
-&nbsp;
-
 ### 🤝 Contributing
 
 - All pull requests are welcome.
 - If you encounter bugs please open an issue.
+- Please use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) when commiting.
+  - See [@commitlint/config-conventional](https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional) for more details.
 
 ### 👋 Acknowledgements
 
 This plugin wouldn't exist without [Pocco81](https://github.com/Pocco81)'s work on the [original](https://github.com/Pocco81/auto-save.nvim).
-
-&nbsp;
