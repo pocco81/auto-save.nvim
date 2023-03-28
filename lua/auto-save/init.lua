@@ -18,38 +18,26 @@ api.nvim_create_augroup("AutoSave", {
   clear = true,
 })
 
-local global_vars = {}
+local timers_by_buffer = {}
 
-local function set_buf_var(buf, name, value)
-  if buf == nil then
-    global_vars[name] = value
-  else
-    if api.nvim_buf_is_valid(buf) then
-      api.nvim_buf_set_var(buf, "autosave_" .. name, value)
-    end
+local function cancel_timer(buf)
+  local timer = timers_by_buffer[buf]
+  if timer ~= nil then
+    timer:close()
+    timers_by_buffer[buf] = nil
   end
-end
-
-local function get_buf_var(buf, name)
-  if buf == nil then
-    return global_vars[name]
-  end
-  local success, mod = pcall(api.nvim_buf_get_var, buf, "autosave_" .. name)
-  return success and mod or nil
 end
 
 local function debounce(lfn, duration)
-  local function inner_debounce()
-    local buf = api.nvim_get_current_buf()
-    if not get_buf_var(buf, "queued") then
-      vim.defer_fn(function()
-        set_buf_var(buf, "queued", false)
-        lfn(buf)
-      end, duration)
-      set_buf_var(buf, "queued", true)
-    end
+  local function inner_debounce(buf)
+    -- instead of canceling the timer we could check if there is one already running for this buffer and restart it (`:again`)
+    cancel_timer(buf)
+    local timer = vim.defer_fn(function()
+      lfn(buf)
+      timers_by_buffer[buf] = nil
+    end, duration)
+    timers_by_buffer[buf] = timer
   end
-
   return inner_debounce
 end
 
@@ -64,9 +52,7 @@ local function echo_execution_message()
   end
 end
 
-function M.save(buf)
-  buf = buf or api.nvim_get_current_buf()
-
+local function save(buf)
   callback("before_asserting_save")
 
   if cnf.opts.condition(buf) == false then
@@ -79,6 +65,8 @@ function M.save(buf)
 
   callback("before_saving")
 
+  -- why is this needed? auto_save_abort is never set to true?
+  -- TODO: remove?
   if g.auto_save_abort == true then
     return
   end
@@ -98,23 +86,48 @@ function M.save(buf)
   end
 end
 
-local save_func = nil
+function M.immediate_save(buf)
+    buf = buf or api.nvim_get_current_buf()
+    cancel_timer(buf)
+    save(buf)
+end
 
-local function perform_save()
+
+local save_func = nil
+local function defer_save(buf)
+  -- why is this needed? auto_save_abort is never set to true anyways?
+  -- TODO: remove?
   g.auto_save_abort = false
+
+  -- is it really needed to cache this function
+  -- TODO: remove?
   if save_func == nil then
-    save_func = (cnf.opts.debounce_delay > 0 and debounce(M.save, cnf.opts.debounce_delay) or M.save)
+    save_func = (cnf.opts.debounce_delay > 0 and debounce(save, cnf.opts.debounce_delay) or save)
   end
-  save_func()
+  save_func(buf)
 end
 
 function M.on()
-  api.nvim_create_autocmd(cnf.opts.trigger_events, {
-    callback = function()
-      perform_save()
+  api.nvim_create_autocmd(cnf.opts.trigger_events.immediate_save, {
+    callback = function (opts)
+        M.immediate_save(opts.buf)
     end,
-    pattern = "*",
     group = "AutoSave",
+    desc = "Immediately save a buffer"
+  })
+  api.nvim_create_autocmd(cnf.opts.trigger_events.defer_save, {
+    callback = function(opts)
+      defer_save(opts.buf)
+    end,
+    group = "AutoSave",
+    desc = "Save a buffer after the `debounce_delay`"
+  })
+  api.nvim_create_autocmd(cnf.opts.trigger_events.cancel_defered_save, {
+    callback = function (opts)
+      cancel_timer(opts.buf)
+    end,
+    group = "AutoSave",
+    desc = "Cancel a pending save timer for a buffer"
   })
 
   api.nvim_create_autocmd({ "VimEnter", "ColorScheme", "UIEnter" }, {
@@ -144,7 +157,6 @@ function M.on()
         end
       end)
     end,
-    pattern = "*",
     group = "AutoSave",
   })
 

@@ -9,7 +9,11 @@ Config = {
       dim = 0.18, -- dim the color of `message`
       cleaning_interval = 1250, -- (milliseconds) automatically clean MsgArea after displaying `message`. See :h MsgArea
     },
-    trigger_events = { "InsertLeave", "TextChanged" }, -- vim events that trigger auto-save. See :h events
+    trigger_events = { -- See :h events
+      immediate_save = { "BufLeave", "FocusLost" }, -- vim events that trigger an immediate save
+    defer_save = { "InsertLeave", "TextChanged" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
+    cancel_defered_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
+    },
     -- function that determines whether to save the current buffer or not
     -- return true: if buffer is ok to be saved
     -- return false: if it's not ok to be saved
@@ -23,7 +27,7 @@ Config = {
       return false -- can't save
     end,
     write_all_buffers = false, -- write all buffers when the current one meets `condition`
-    debounce_delay = 135, -- saves the file at most every `debounce_delay` milliseconds
+    debounce_delay = 1000, -- delay after which a pending save is executed
     callbacks = { -- functions to be executed at different intervals
       enabling = nil, -- ran when enabling auto-save
       disabling = nil, -- ran when disabling auto-save
