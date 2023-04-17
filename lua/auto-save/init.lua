@@ -52,13 +52,22 @@ local function echo_execution_message()
   end
 end
 
-local function save(buf)
-  callback("before_asserting_save")
-
-  if cnf.opts.condition(buf) == false then
-    return
+--- Determines if the given buffer is modifiable and if the condition from the config yields true for it
+--- @param buf number
+--- @return boolean
+local function should_be_saved(buf)
+  if fn.getbufvar(buf, "&modifiable") ~= 1 then
+    return false
   end
 
+  if cnf.opts.condition ~= nil then
+    return cnf.opts.condition(buf)
+  end
+
+  return true
+end
+
+local function save(buf)
   if not api.nvim_buf_get_option(buf, "modified") then
     return
   end
@@ -86,19 +95,13 @@ local function save(buf)
   end
 end
 
-function M.immediate_save(buf)
-    buf = buf or api.nvim_get_current_buf()
-    cancel_timer(buf)
-    save(buf)
+local function immediate_save(buf)
+  cancel_timer(buf)
+  save(buf)
 end
-
 
 local save_func = nil
 local function defer_save(buf)
-  -- why is this needed? auto_save_abort is never set to true anyways?
-  -- TODO: remove?
-  g.auto_save_abort = false
-
   -- is it really needed to cache this function
   -- TODO: remove?
   if save_func == nil then
@@ -109,25 +112,31 @@ end
 
 function M.on()
   api.nvim_create_autocmd(cnf.opts.trigger_events.immediate_save, {
-    callback = function (opts)
-        M.immediate_save(opts.buf)
+    callback = function(opts)
+      if should_be_saved(opts.buf) then
+        immediate_save(opts.buf)
+      end
     end,
     group = "AutoSave",
-    desc = "Immediately save a buffer"
+    desc = "Immediately save a buffer",
   })
   api.nvim_create_autocmd(cnf.opts.trigger_events.defer_save, {
     callback = function(opts)
-      defer_save(opts.buf)
+      if should_be_saved(opts.buf) then
+        defer_save(opts.buf)
+      end
     end,
     group = "AutoSave",
-    desc = "Save a buffer after the `debounce_delay`"
+    desc = "Save a buffer after the `debounce_delay`",
   })
   api.nvim_create_autocmd(cnf.opts.trigger_events.cancel_defered_save, {
-    callback = function (opts)
-      cancel_timer(opts.buf)
+    callback = function(opts)
+      if should_be_saved(opts.buf) then
+        cancel_timer(opts.buf)
+      end
     end,
     group = "AutoSave",
-    desc = "Cancel a pending save timer for a buffer"
+    desc = "Cancel a pending save timer for a buffer",
   })
 
   api.nvim_create_autocmd({ "VimEnter", "ColorScheme", "UIEnter" }, {
