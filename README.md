@@ -111,11 +111,10 @@ EOF
   write_all_buffers = false, -- write all buffers when the current one meets `condition`
   debounce_delay = 1000, -- delay after which a pending save is executed
   callbacks = { -- functions to be executed at different intervals
-    enabling = nil, -- ran when enabling auto-save
-    disabling = nil, -- ran when disabling auto-save
     before_saving = nil, -- ran before doing the actual save
-    after_saving = nil -- ran after doing the actual save
-  }
+  },
+ -- log debug messages to 'auto-save.log' file in neovim cache directory, set to `true` to enable
+  debug = false,
 }
 ```
 

@@ -4,6 +4,7 @@ local cnf = require("auto-save.config")
 local callback = require("auto-save.utils.data").do_callback
 local colors = require("auto-save.utils.colors")
 local echo = require("auto-save.utils.echo")
+local logger
 local autosave_running
 local api = vim.api
 local g = vim.g
@@ -25,6 +26,8 @@ local function cancel_timer(buf)
   if timer ~= nil then
     timer:close()
     timers_by_buffer[buf] = nil
+
+    logger.log(buf, "Timer canceled")
   end
 end
 
@@ -37,6 +40,8 @@ local function debounce(lfn, duration)
       timers_by_buffer[buf] = nil
     end, duration)
     timers_by_buffer[buf] = timer
+
+    logger.log(buf, "Timer started")
   end
   return inner_debounce
 end
@@ -64,11 +69,15 @@ local function should_be_saved(buf)
     return cnf.opts.condition(buf)
   end
 
+  logger.log(buf, "Should save buffer")
+
   return true
 end
 
 local function save(buf)
   if not api.nvim_buf_get_option(buf, "modified") then
+    logger.log(buf, "Abort saving buffer")
+
     return
   end
 
@@ -88,7 +97,7 @@ local function save(buf)
     end)
   end
 
-  callback("after_saving")
+  logger.log(buf, "Saved buffer")
 
   if cnf.opts.execution_message.enabled == true then
     echo_execution_message()
@@ -169,7 +178,6 @@ function M.on()
     group = "AutoSave",
   })
 
-  callback("enabling")
   autosave_running = true
 end
 
@@ -178,7 +186,6 @@ function M.off()
     clear = true,
   })
 
-  callback("disabling")
   autosave_running = false
 end
 
@@ -194,6 +201,7 @@ end
 
 function M.setup(custom_opts)
   cnf:set_options(custom_opts)
+  logger = require("auto-save.utils.logging").new(cnf:get_options())
 end
 
 return M
