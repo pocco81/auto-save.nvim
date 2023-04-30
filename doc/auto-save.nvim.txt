@@ -1,0 +1,219 @@
+*auto-save.nvim.txt*                                Last change: 2023 April 30
+
+==============================================================================
+Table of Contents                           *auto-save.nvim-table-of-contents*
+
+1. Features                                          |auto-save.nvim-features|
+2. Requirements                                  |auto-save.nvim-requirements|
+3. Installation                                  |auto-save.nvim-installation|
+  - Lazy.nvim                          |auto-save.nvim-installation-lazy.nvim|
+  - Packer.nvim                      |auto-save.nvim-installation-packer.nvim|
+  - vim-plug                            |auto-save.nvim-installation-vim-plug|
+4. Configuration                                |auto-save.nvim-configuration|
+  - Condition                         |auto-save.nvim-configuration-condition|
+5. Usage                                                |auto-save.nvim-usage|
+6. Contributing                                  |auto-save.nvim-contributing|
+7. Acknowledgements                          |auto-save.nvim-acknowledgements|
+
+==============================================================================
+1. Features                                          *auto-save.nvim-features*
+
+
+- automatically save your changes so the world doesn’t collapse
+- highly customizable:
+    - conditionals to assert whether to save or not
+    - execution message (it can be dimmed and personalized)
+    - events that trigger auto-save
+- debounce the save with a delay
+- multiple callbacks
+- automatically clean the message area
+
+
+==============================================================================
+2. Requirements                                  *auto-save.nvim-requirements*
+
+
+- Neovim >= 0.8.0
+
+
+==============================================================================
+3. Installation                                  *auto-save.nvim-installation*
+
+Install the plugin with your favourite package manager:
+
+
+LAZY.NVIM                              *auto-save.nvim-installation-lazy.nvim*
+
+>lua
+    {
+      "okuuva/auto-save.nvim",
+      cmd = "ASToggle", -- optional for lazy loading on command
+      event = { "InsertLeave", "TextChanged" } -- optional for lazy loading on trigger events
+      opts = {
+        -- your config goes here
+        -- or just leave it empty :)
+      },
+    },
+<
+
+
+PACKER.NVIM                          *auto-save.nvim-installation-packer.nvim*
+
+>lua
+    use({
+      "okuuva/auto-save.nvim",
+      config = function()
+       require("auto-save").setup {
+         -- your config goes here
+         -- or just leave it empty :)
+       }
+      end,
+    })
+<
+
+
+VIM-PLUG                                *auto-save.nvim-installation-vim-plug*
+
+>vim
+    Plug 'okuuva/auto-save.nvim'
+    lua << EOF
+      require("auto-save").setup {
+        -- your config goes here
+        -- or just leave it empty :)
+      }
+    EOF
+<
+
+
+==============================================================================
+4. Configuration                                *auto-save.nvim-configuration*
+
+**auto-save** comes with the following defaults:
+
+>lua
+    {
+      enabled = true, -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
+      execution_message = {
+        enabled = true,
+        message = function() -- message to print on save
+          return ("AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"))
+        end,
+        dim = 0.18, -- dim the color of `message`
+        cleaning_interval = 1250, -- (milliseconds) automatically clean MsgArea after displaying `message`. See :h MsgArea
+      },
+      trigger_events = { -- See :h events
+        immediate_save = { "BufLeave", "FocusLost" }, -- vim events that trigger an immediate save
+        defer_save = { "InsertLeave", "TextChanged" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
+        cancel_defered_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
+      },
+      -- function that takes the buffer handle and determines whether to save the current buffer or not
+      -- return true: if buffer is ok to be saved
+      -- return false: if it's not ok to be saved
+      -- if set to `nil` then no specific condition is applied
+      condition = nil,
+      write_all_buffers = false, -- write all buffers when the current one meets `condition`
+      debounce_delay = 1000, -- delay after which a pending save is executed
+      callbacks = { -- functions to be executed at different intervals
+        before_saving = nil, -- ran before doing the actual save
+      },
+     -- log debug messages to 'auto-save.log' file in neovim cache directory, set to `true` to enable
+      debug = false,
+    }
+<
+
+
+CONDITION                             *auto-save.nvim-configuration-condition*
+
+The condition field of the configuration allows the user to exclude
+**auto-save** from saving specific buffers.
+
+Here is an example using a helper function from `auto-save.utils.data` that
+disables auto-save for specified file types:
+
+>lua
+    {
+      condition = function(buf)
+        local fn = vim.fn
+        local utils = require("auto-save.utils.data")
+    
+        -- don't save for `sql` file types
+        if utils.not_in(fn.getbufvar(buf, "&filetype"), {'sql'}) then
+          return true
+        end
+        return false
+      end
+    }
+<
+
+You may also exclude `special-buffers` see (`:h buftype` and `:h
+special-buffers`):
+
+>lua
+    {
+      condition = function(buf)
+        local fn = vim.fn
+    
+        -- don't save for special-buffers
+        if fn.getbufvar(buf, "&buftype") ~= '' then
+          return false
+        end
+        return true
+      end
+    }
+<
+
+Buffers that are `nomodifiable` are not saved by default.
+
+
+==============================================================================
+5. Usage                                                *auto-save.nvim-usage*
+
+Besides running auto-save at startup (if you have `enabled = true` in your
+config), you may as well:
+
+
+- `ASToggle`toggle auto-save
+
+You may want to set up a key mapping for toggling:
+
+>lua
+    vim.api.nvim_set_keymap("n", "<leader>n", ":ASToggle<CR>", {})
+<
+
+or as part of the `lazy.nvim` plugin spec:
+
+>lua
+    {
+      "okuuva/auto-save.nvim",
+      keys = {
+        { "<leader>n", ":ASToggle<CR>", desc = "Toggle auto-save" },
+      },
+      ...
+    },
+<
+
+
+==============================================================================
+6. Contributing                                  *auto-save.nvim-contributing*
+
+
+- All pull requests are welcome.
+- If you encounter bugs please open an issue.
+- Please use Conventional Commits <https://www.conventionalcommits.org/en/v1.0.0/> when commiting.
+    - See @commitlint/config-conventional <https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional> for more details.
+
+
+==============================================================================
+7. Acknowledgements                          *auto-save.nvim-acknowledgements*
+
+This plugin wouldn’t exist without Pocco81 <https://github.com/Pocco81>’s
+work on the original <https://github.com/Pocco81/auto-save.nvim>.
+
+==============================================================================
+8. Links                                                *auto-save.nvim-links*
+
+1. *@commitlint/config-conventional*: 
+
+Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
+
+vim:tw=78:ts=8:noet:ft=help:norl:
