@@ -1,0 +1,14 @@
+on:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dreampulse/action-semantic-pull-request@a37dbf1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
