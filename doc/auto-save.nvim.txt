@@ -1,4 +1,4 @@
-*auto-save.nvim.txt*                                Last change: 2023 April 30
+*auto-save.nvim.txt*       For Neovim >= 0.8.0      Last change: 2023 April 30
 
 ==============================================================================
 Table of Contents                           *auto-save.nvim-table-of-contents*
