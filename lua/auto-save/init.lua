@@ -1,13 +1,12 @@
 local M = {}
 
 local cnf = require("auto-save.config")
-local callback = require("auto-save.utils.data").do_callback
 local colors = require("auto-save.utils.colors")
 local echo = require("auto-save.utils.echo")
+local autocmds = require("auto-save.utils.autocommands")
 local logger
 local autosave_running
 local api = vim.api
-local g = vim.g
 local fn = vim.fn
 local cmd = vim.cmd
 local o = vim.o
@@ -15,9 +14,7 @@ local AUTO_SAVE_COLOR = "MsgArea"
 local BLACK = "#000000"
 local WHITE = "#ffffff"
 
-api.nvim_create_augroup("AutoSave", {
-  clear = true,
-})
+autocmds.create_augroup({ clear = true })
 
 local timers_by_buffer = {}
 
@@ -81,13 +78,7 @@ local function save(buf)
     return
   end
 
-  callback("before_saving")
-
-  -- why is this needed? auto_save_abort is never set to true?
-  -- TODO: remove?
-  if g.auto_save_abort == true then
-    return
-  end
+  autocmds.exec_autocmd("AutoSaveWritePre", buf)
 
   if cnf.opts.write_all_buffers then
     cmd("silent! wall")
@@ -97,6 +88,7 @@ local function save(buf)
     end)
   end
 
+  autocmds.exec_autocmd("AutoSaveWritePost", buf)
   logger.log(buf, "Saved buffer")
 
   if cnf.opts.execution_message.enabled == true then
@@ -120,13 +112,15 @@ local function defer_save(buf)
 end
 
 function M.on()
+  local augroup = autocmds.create_augroup()
+
   api.nvim_create_autocmd(cnf.opts.trigger_events.immediate_save, {
     callback = function(opts)
       if should_be_saved(opts.buf) then
         immediate_save(opts.buf)
       end
     end,
-    group = "AutoSave",
+    group = augroup,
     desc = "Immediately save a buffer",
   })
   api.nvim_create_autocmd(cnf.opts.trigger_events.defer_save, {
@@ -135,7 +129,7 @@ function M.on()
         defer_save(opts.buf)
       end
     end,
-    group = "AutoSave",
+    group = augroup,
     desc = "Save a buffer after the `debounce_delay`",
   })
   api.nvim_create_autocmd(cnf.opts.trigger_events.cancel_defered_save, {
@@ -144,7 +138,7 @@ function M.on()
         cancel_timer(opts.buf)
       end
     end,
-    group = "AutoSave",
+    group = augroup,
     desc = "Cancel a pending save timer for a buffer",
   })
 
@@ -175,16 +169,14 @@ function M.on()
         end
       end)
     end,
-    group = "AutoSave",
+    group = augroup,
   })
 
   autosave_running = true
 end
 
 function M.off()
-  api.nvim_create_augroup("AutoSave", {
-    clear = true,
-  })
+  autocmds.create_augroup({ clear = true })
 
   autosave_running = false
 end

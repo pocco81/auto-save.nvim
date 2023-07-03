@@ -33,7 +33,7 @@
   - execution message (it can be dimmed and personalized)
   - events that trigger auto-save
 - debounce the save with a delay
-- multiple callbacks
+- hook into the lifecycle with autocommands
 - automatically clean the message area
 
 ## 📚 Requirements
@@ -113,9 +113,6 @@ EOF
   condition = nil,
   write_all_buffers = false, -- write all buffers when the current one meets `condition`
   debounce_delay = 1000, -- delay after which a pending save is executed
-  callbacks = { -- functions to be executed at different intervals
-    before_saving = nil, -- ran before doing the actual save
-  },
  -- log debug messages to 'auto-save.log' file in neovim cache directory, set to `true` to enable
   debug = false,
 }
@@ -184,6 +181,34 @@ or as part of the `lazy.nvim` plugin spec:
 },
 
 ```
+
+## 🪝 Events / Callbacks
+
+The plugin fires events at various points during its lifecycle which users can hook into:
+
+- `AutoSaveWritePre` Just before a buffer is getting saved
+- `AutoSaveWritePost` Just after a buffer is getting saved
+
+It will always supply the current buffer in the `data.saved_buffer`
+
+An example to always print the file name before a file is getting saved (use `:messages` if the execution message swallows the print):
+
+```lua
+local group = vim.api.nvim_create_augroup('autosave', {})
+
+vim.api.nvim_create_autocmd('User', {
+    pattern = 'AutoSaveWritePre',
+    group = group,
+    callback = function(opts)
+        if opts.data.saved_buffer ~= nil then
+            local filename = vim.api.nvim_buf_get_name(opts.data.saved_buffer)
+            print('We are about to save ' .. filename .. ' get ready captain!')
+        end
+    end,
+})
+```
+
+If you want more Events, feel free to open an issue.
 
 ## 🤝 Contributing
 

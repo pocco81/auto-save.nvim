@@ -14,12 +14,4 @@ function M.not_in(var, arr)
   end
 end
 
-function M.do_callback(callback_name)
-  local cnf = require("auto-save.config").opts
-
-  if type(cnf.callbacks[callback_name]) == "function" then
-    cnf.callbacks[callback_name]()
-  end
-end
-
 return M
