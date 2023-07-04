@@ -112,7 +112,7 @@ local function defer_save(buf)
 end
 
 function M.on()
-  local augroup = autocmds.create_augroup()
+  local augroup = autocmds.create_augroup({ clear = true })
 
   api.nvim_create_autocmd(cnf.opts.trigger_events.immediate_save, {
     callback = function(opts)
