@@ -1,18 +1,18 @@
 local M = {}
 
+--- @class Config
 local cnf = require("auto-save.config")
 local colors = require("auto-save.utils.colors")
 local echo = require("auto-save.utils.echo")
 local autocmds = require("auto-save.utils.autocommands")
-local logger
-local autosave_running
+
 local api = vim.api
 local fn = vim.fn
 local cmd = vim.cmd
-local o = vim.o
-local AUTO_SAVE_COLOR = "MsgArea"
-local BLACK = "#000000"
-local WHITE = "#ffffff"
+local schedule = vim.schedule
+
+local logger
+local autosave_running
 
 autocmds.create_augroup({ clear = true })
 
@@ -44,9 +44,10 @@ local function debounce(lfn, duration)
 end
 
 local function echo_execution_message()
-  local msg = type(cnf.opts.execution_message.message) == "function" and cnf.opts.execution_message.message()
-    or cnf.opts.execution_message.message
-  api.nvim_echo({ { msg, AUTO_SAVE_COLOR } }, true, {})
+  local message = cnf.opts.execution_message.message
+  local msg = type(message) == "function" and message() or message
+  ---@diagnostic disable-next-line: deprecated
+  colors.echo_with_highlight(msg --[[@as string]])
   if cnf.opts.execution_message.cleaning_interval > 0 then
     fn.timer_start(cnf.opts.execution_message.cleaning_interval, function()
       cmd([[echon '']])
@@ -142,32 +143,19 @@ function M.on()
     desc = "Cancel a pending save timer for a buffer",
   })
 
-  api.nvim_create_autocmd({ "VimEnter", "ColorScheme", "UIEnter" }, {
-    callback = function()
-      vim.schedule(function()
-        if cnf.opts.execution_message.dim > 0 then
-          MSG_AREA = colors.get_hl("MsgArea")
-          if MSG_AREA.foreground ~= nil then
-            MSG_AREA.background = (MSG_AREA.background or colors.get_hl("Normal")["background"])
-            local foreground = (
-              o.background == "dark"
-                and colors.darken(
-                  (MSG_AREA.background or BLACK),
-                  cnf.opts.execution_message.dim,
-                  MSG_AREA.foreground or BLACK
-                )
-              or colors.lighten(
-                (MSG_AREA.background or WHITE),
-                cnf.opts.execution_message.dim,
-                MSG_AREA.foreground or WHITE
-              )
-            )
-
-            colors.highlight("AutoSaveText", { fg = foreground })
-            AUTO_SAVE_COLOR = "AutoSaveText"
-          end
-        end
+  local function setup_dimming()
+    if cnf.opts.execution_message.enabled then
+      schedule(function()
+        ---@diagnostic disable-next-line: deprecated
+        colors.apply_colors(cnf.opts.execution_message.dim)
       end)
+    end
+  end
+
+  setup_dimming()
+  api.nvim_create_autocmd("ColorScheme", {
+    callback = function()
+      setup_dimming()
     end,
     group = augroup,
   })

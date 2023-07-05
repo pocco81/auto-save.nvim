@@ -1,8 +1,10 @@
+--- @class Config
 Config = {
   opts = {
     enabled = true, -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
     execution_message = {
       enabled = true,
+      --- @type string|fun(): string
       message = function() -- message to print on save
         return ("AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"))
       end,
@@ -18,6 +20,7 @@ Config = {
     -- return true: if buffer is ok to be saved
     -- return false: if it's not ok to be saved
     -- if set to `nil` then no specific condition is applied
+    --- @type nil|fun(buf: number): boolean
     condition = nil,
     write_all_buffers = false, -- write all buffers when the current one meets `condition`
     debounce_delay = 1000, -- delay after which a pending save is executed
