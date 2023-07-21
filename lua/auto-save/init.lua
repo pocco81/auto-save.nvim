@@ -12,7 +12,7 @@ local cmd = vim.cmd
 local schedule = vim.schedule
 
 local logger
-local autosave_running
+local autosave_running = nil
 
 autocmds.create_augroup({ clear = true })
 
@@ -183,6 +183,14 @@ end
 function M.setup(custom_opts)
   cnf:set_options(custom_opts)
   logger = require("auto-save.utils.logging").new(cnf:get_options())
+
+  if autosave_running == nil then
+    if cnf.opts.enabled then
+      M.on()
+    else
+      M.off()
+    end
+  end
 end
 
 return M
