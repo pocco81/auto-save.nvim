@@ -1,4 +1,4 @@
-*auto-save.nvim.txt*       For Neovim >= 0.8.0       Last change: 2023 July 21
+*auto-save.nvim.txt*       For Neovim >= 0.8.0       Last change: 2023 July 27
 
 ==============================================================================
 Table of Contents                           *auto-save.nvim-table-of-contents*
@@ -12,13 +12,12 @@ Table of Contents                           *auto-save.nvim-table-of-contents*
 4. Configuration                                |auto-save.nvim-configuration|
   - Condition                         |auto-save.nvim-configuration-condition|
 5. Usage                                                |auto-save.nvim-usage|
-6. 🪝 Events / Callbacks            |auto-save.nvim-🪝-events-/-callbacks|
+6. Events / Callbacks                      |auto-save.nvim-events-/-callbacks|
 7. Contributing                                  |auto-save.nvim-contributing|
 8. Acknowledgements                          |auto-save.nvim-acknowledgements|
 
 ==============================================================================
 1. Features                                          *auto-save.nvim-features*
-
 
 - automatically save your changes so the world doesn’t collapse
 - highly customizable:
@@ -32,7 +31,6 @@ Table of Contents                           *auto-save.nvim-table-of-contents*
 
 ==============================================================================
 2. Requirements                                  *auto-save.nvim-requirements*
-
 
 - Neovim >= 0.8.0
 
@@ -170,7 +168,6 @@ Buffers that are `nomodifiable` are not saved by default.
 Besides running auto-save at startup (if you have `enabled = true` in your
 config), you may as well:
 
-
 - `ASToggle`toggle auto-save
 
 You may want to set up a key mapping for toggling:
@@ -193,11 +190,10 @@ or as part of the `lazy.nvim` plugin spec:
 
 
 ==============================================================================
-6. 🪝 Events / Callbacks            *auto-save.nvim-🪝-events-/-callbacks*
+6. Events / Callbacks                      *auto-save.nvim-events-/-callbacks*
 
 The plugin fires events at various points during its lifecycle which users can
 hook into:
-
 
 - `AutoSaveWritePre` Just before a buffer is getting saved
 - `AutoSaveWritePost` Just after a buffer is getting saved
@@ -227,7 +223,6 @@ If you want more Events, feel free to open an issue.
 
 ==============================================================================
 7. Contributing                                  *auto-save.nvim-contributing*
-
 
 - All pull requests are welcome.
 - If you encounter bugs please open an issue.
