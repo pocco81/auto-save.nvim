@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: kdheepak/panvimdoc@v3.0.5
+      - uses: kdheepak/panvimdoc@v3.0.6
         with:
           vimdoc: auto-save.nvim
           version: "Neovim >= 0.8.0"

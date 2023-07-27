@@ -183,7 +183,7 @@ or as part of the `lazy.nvim` plugin spec:
 
 ```
 
-## 🪝 Events / Callbacks
+## ↩️  Events / Callbacks
 
 The plugin fires events at various points during its lifecycle which users can hook into:
 
