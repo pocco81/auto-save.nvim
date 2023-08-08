@@ -192,6 +192,10 @@ function M.toggle()
     end
 end
 
+function M.get_autosave_state()
+	return autosave_running
+end
+
 function M.setup(custom_opts)
     cnf:set_options(custom_opts)
 end
