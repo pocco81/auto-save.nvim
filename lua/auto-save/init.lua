@@ -82,22 +82,19 @@ function M.save(buf)
 
     callback("after_saving")
 
-    if not cnf.opts.print_enabled then return end
+    if not cnf.opts.print_enabled then
+        return
+    end
 
-    api.nvim_echo(
+    api.nvim_echo({
         {
-            {
-                (
-                    type(cnf.opts.execution_message.message) == "function"
-                        and cnf.opts.execution_message.message()
-                    or cnf.opts.execution_message.message
-                ),
-                AUTO_SAVE_COLOR,
-            },
+            (
+                type(cnf.opts.execution_message.message) == "function" and cnf.opts.execution_message.message()
+                or cnf.opts.execution_message.message
+            ),
+            AUTO_SAVE_COLOR,
         },
-        true,
-        {}
-    )
+    }, true, {})
     if cnf.opts.execution_message.cleaning_interval > 0 then
         fn.timer_start(cnf.opts.execution_message.cleaning_interval, function()
             cmd([[echon '']])
@@ -106,8 +103,7 @@ function M.save(buf)
     api.nvim_echo({
         {
             (
-                type(cnf.opts.execution_message.message) == "function"
-                    and cnf.opts.execution_message.message()
+                type(cnf.opts.execution_message.message) == "function" and cnf.opts.execution_message.message()
                 or cnf.opts.execution_message.message
             ),
             AUTO_SAVE_COLOR,
@@ -120,12 +116,13 @@ function M.save(buf)
     end
 end
 
-local save_func = (
-    cnf.opts.debounce_delay > 0 and debounce(M.save, cnf.opts.debounce_delay) or M.save
-)
+local save_func = nil
 
 local function perform_save()
     g.auto_save_abort = false
+    if save_func == nil then
+        save_func = (cnf.opts.debounce_delay > 0 and debounce(M.save, cnf.opts.debounce_delay) or M.save)
+    end
     save_func()
 end
 
@@ -144,16 +141,14 @@ function M.on()
                 if cnf.opts.execution_message.dim > 0 then
                     MSG_AREA = colors.get_hl("MsgArea")
                     if MSG_AREA.foreground ~= nil then
-                        MSG_AREA.background = (
-                            MSG_AREA.background or colors.get_hl("Normal")["background"]
-                        )
+                        MSG_AREA.background = (MSG_AREA.background or colors.get_hl("Normal")["background"])
                         local foreground = (
                             o.background == "dark"
-                                and colors.darken(
-                                    (MSG_AREA.background or BLACK),
-                                    cnf.opts.execution_message.dim,
-                                    MSG_AREA.foreground or BLACK
-                                )
+                            and colors.darken(
+                                (MSG_AREA.background or BLACK),
+                                cnf.opts.execution_message.dim,
+                                MSG_AREA.foreground or BLACK
+                            )
                             or colors.lighten(
                                 (MSG_AREA.background or WHITE),
                                 cnf.opts.execution_message.dim,
