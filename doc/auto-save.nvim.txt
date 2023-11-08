@@ -1,4 +1,4 @@
-*auto-save.nvim.txt*       For Neovim >= 0.8.0       Last change: 2023 July 27
+*auto-save.nvim.txt*     For Neovim >= 0.8.0     Last change: 2023 November 08
 
 ==============================================================================
 Table of Contents                           *auto-save.nvim-table-of-contents*
@@ -10,6 +10,7 @@ Table of Contents                           *auto-save.nvim-table-of-contents*
   - Packer.nvim                      |auto-save.nvim-installation-packer.nvim|
   - vim-plug                            |auto-save.nvim-installation-vim-plug|
 4. Configuration                                |auto-save.nvim-configuration|
+  - Trigger Events               |auto-save.nvim-configuration-trigger-events|
   - Condition                         |auto-save.nvim-configuration-condition|
 5. Usage                                                |auto-save.nvim-usage|
 6. Events / Callbacks                      |auto-save.nvim-events-/-callbacks|
@@ -119,9 +120,29 @@ VIM-PLUG                                *auto-save.nvim-installation-vim-plug*
 <
 
 
+TRIGGER EVENTS                   *auto-save.nvim-configuration-trigger-events*
+
+The `trigger_events` field of the configuration allows the user to customize at
+which events **auto-save** saves. While the default are very sane and should be
+enough for most usecases, finetuning for extended possibilities is supported.
+
+It is also possible to pass a pattern to a trigger event, if you only want to
+execute the event on special file patterns:
+
+>lua
+    {
+      trigger_events = {
+        immediate_save = {
+          { "BufLeave", pattern = {".c", ".h"} }
+        }
+      }
+    }
+<
+
+
 CONDITION                             *auto-save.nvim-configuration-condition*
 
-The condition field of the configuration allows the user to exclude
+The `condition` field of the configuration allows the user to exclude
 **auto-save** from saving specific buffers.
 
 Here is an example using a helper function from `auto-save.utils.data` that
