@@ -119,9 +119,26 @@ EOF
 }
 ```
 
+### Trigger Events
+
+The `trigger_events` field of the configuration allows the user to customize at which events **auto-save** saves.
+While the default are very sane and should be enough for most usecases, finetuning for extended possibilities is supported.
+
+It is also possible to pass a pattern to a trigger event, if you only want to execute the event on special file patterns:
+
+``` lua
+{
+  trigger_events = {
+    immediate_save = {
+      { "BufLeave", pattern = {"*.c", "*.h"} }
+    }
+  }
+}
+```
+
 ### Condition
 
-The condition field of the configuration allows the user to exclude **auto-save** from saving specific buffers.
+The `condition` field of the configuration allows the user to exclude **auto-save** from saving specific buffers.
 
 Here is an example using a helper function from `auto-save.utils.data` that disables auto-save for specified file types:
 

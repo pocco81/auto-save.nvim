@@ -12,11 +12,11 @@ Config = {
       cleaning_interval = 1250, -- (milliseconds) automatically clean MsgArea after displaying `message`. See :h MsgArea
     },
     trigger_events = { -- See :h events
-      --- @type nil|string[]
+      --- @type TriggerEvent[]?
       immediate_save = { "BufLeave", "FocusLost" }, -- vim events that trigger an immediate save
-      --- @type nil|string[]
+      --- @type TriggerEvent[]?
       defer_save = { "InsertLeave", "TextChanged" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
-      --- @type nil|string[]
+      --- @type TriggerEvent[]?
       cancel_defered_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
     },
     -- function that takes the buffer handle and determines whether to save the current buffer or not

@@ -117,40 +117,33 @@ function M.on()
   local augroup = autocmds.create_augroup({ clear = true })
 
   local events = cnf.opts.trigger_events
-
-  if events.immediate_save ~= nil and #events.immediate_save > 0 then
-    api.nvim_create_autocmd(events.immediate_save, {
-      callback = function(opts)
-        if should_be_saved(opts.buf) then
-          immediate_save(opts.buf)
-        end
-      end,
-      group = augroup,
-      desc = "Immediately save a buffer",
-    })
-  end
-  if events.defer_save ~= nil and #events.defer_save > 0 then
-    api.nvim_create_autocmd(events.defer_save, {
-      callback = function(opts)
-        if should_be_saved(opts.buf) then
-          defer_save(opts.buf)
-        end
-      end,
-      group = augroup,
-      desc = "Save a buffer after the `debounce_delay`",
-    })
-  end
-  if events.cancel_defered_save ~= nil and #events.cancel_defered_save > 0 then
-    api.nvim_create_autocmd(events.cancel_defered_save, {
-      callback = function(opts)
-        if should_be_saved(opts.buf) then
-          cancel_timer(opts.buf)
-        end
-      end,
-      group = augroup,
-      desc = "Cancel a pending save timer for a buffer",
-    })
-  end
+  autocmds.create_autocmd_for_trigger_events(events.immediate_save, {
+    callback = function(opts)
+      if should_be_saved(opts.buf) then
+        immediate_save(opts.buf)
+      end
+    end,
+    group = augroup,
+    desc = "Immediately save a buffer",
+  })
+  autocmds.create_autocmd_for_trigger_events(events.defer_save, {
+    callback = function(opts)
+      if should_be_saved(opts.buf) then
+        defer_save(opts.buf)
+      end
+    end,
+    group = augroup,
+    desc = "Save a buffer after the `debounce_delay`",
+  })
+  autocmds.create_autocmd_for_trigger_events(events.cancel_defered_save, {
+    callback = function(opts)
+      if should_be_saved(opts.buf) then
+        cancel_timer(opts.buf)
+      end
+    end,
+    group = augroup,
+    desc = "Cancel a pending save timer for a buffer",
+  })
 
   local function setup_dimming()
     if cnf.opts.execution_message.enabled then
