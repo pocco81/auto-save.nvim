@@ -24,6 +24,7 @@ Config = {
 		end,
 		write_all_buffers = false, -- write all buffers when the current one meets `condition`
 		debounce_delay = 135, -- saves the file at most every `debounce_delay` milliseconds
+		print_enabled = true, -- If false, all messages of auto-save.nvim will be disabled.
 		callbacks = { -- functions to be executed at different intervals
 			enabling = nil, -- ran when enabling auto-save
 			disabling = nil, -- ran when disabling auto-save

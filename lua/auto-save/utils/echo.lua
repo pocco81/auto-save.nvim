@@ -1,6 +1,9 @@
 local TITLE = "auto-save"
 
 return function(msg, kind)
+	local cnf = require("auto-save.config").opts
+	if not cnf.print_enabled then return end
+
 	local has_notify_plugin = pcall(require, "notify")
 	local level = {}
 
