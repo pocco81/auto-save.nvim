@@ -56,6 +56,10 @@ end
 function M.save(buf)
     buf = buf or api.nvim_get_current_buf()
 
+    if not api.nvim_buf_is_loaded(buf) then
+        return
+    end
+
     callback("before_asserting_save")
 
     if cnf.opts.condition(buf) == false then
