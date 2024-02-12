@@ -79,7 +79,7 @@ local function save(buf)
     return
   end
 
-  autocmds.exec_autocmd("AutoSaveWritePre", buf)
+  autocmds.exec_autocmd("AutoSaveWritePre", { saved_buffer = buf })
 
   local noautocmd = cnf.opts.noautocmd and "noautocmd " or ""
   if cnf.opts.write_all_buffers then
@@ -90,7 +90,7 @@ local function save(buf)
     end)
   end
 
-  autocmds.exec_autocmd("AutoSaveWritePost", buf)
+  autocmds.exec_autocmd("AutoSaveWritePost", { saved_buffer = buf })
   logger.log(buf, "Saved buffer")
 
   if cnf.opts.execution_message.enabled == true then
@@ -163,12 +163,16 @@ function M.on()
   })
 
   autosave_running = true
+
+  autocmds.exec_autocmd("AutoSaveEnable")
 end
 
 function M.off()
   autocmds.create_augroup({ clear = true })
 
   autosave_running = false
+
+  autocmds.exec_autocmd("AutoSaveDisable")
 end
 
 function M.toggle()

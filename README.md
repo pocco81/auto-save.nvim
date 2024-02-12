@@ -206,6 +206,8 @@ The plugin fires events at various points during its lifecycle which users can h
 
 - `AutoSaveWritePre` Just before a buffer is getting saved
 - `AutoSaveWritePost` Just after a buffer is getting saved
+- `AutoSaveEnable` Just after enabling the plugin
+- `AutoSaveDisable` Just after disabling the plugin
 
 It will always supply the current buffer in the `data.saved_buffer`
 
